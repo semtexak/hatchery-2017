@@ -1,0 +1,58 @@
+{
+  "useCdn": true,
+  "dependencies": {
+    "systemjs": {
+      "main": "system.src.js",
+      "baseUri": "https://cdn.plus4u.net/libs/systemjs/0.19.47/"
+    },
+    "react": {
+      "baseUri": "https://cdn.plus4u.net/libs/react/15.4.2/",
+      "main": "react.js"
+    },
+    "react-dom": {
+      "baseUri": "https://cdn.plus4u.net/libs/react/15.4.2/",
+      "main": "react-dom.js"
+    },
+    "bootstrap": {
+      "main": "js/bootstrap.js",
+      "baseUri": "https://cdn.plus4u.net/libs/bootstrap/3.3.7/"
+    },
+    "uu5g04": {
+      "baseUri": "https://cdn.plus4u.net/uu-uu5g04/0.16.2/",
+      "main": "uu5g04.js"
+    },
+    "uu_appg01_core": {
+      "baseUri": "https://cdn.plus4u.net/uu-appg01-core/2.1.0/",
+      "main": "uu_appg01_core.js"
+    },
+    "uu_appg01": {
+      "main": "uu_appg01-base.js",
+      "baseUri": "https://cdn.plus4u.net/uu-appg01/2.1.0/"
+    },
+    "uu_oidcg01": {
+      "baseUri": "https://cdn.plus4u.net/uu-oidcg01/2.0.2/",
+      "main": "uu_oidcg01.js"
+    }
+  },
+  "isProductionBuild": false,
+  "useMockData": true,
+  "host": "0.0.0.0",
+  "port": 1234,
+  "https": false,
+  "autoOpenInBrowser": false,
+  "devServerAppBaseUrlPath": "/vendor-app-subapp/0-0/",
+  "sourcePath": "src",
+  "outputPath": "../uu5/public",
+  "entryPoints": [
+    "index.js"
+  ],
+  "minify": false,
+  "useSourceMaps": true,
+  "appBaseUrlPath": "<preserve-2-path-segments>",
+  "appAssetsRelativeUrlPath": "public/0.1.0/",
+  "aliases": {
+    "calls": "C:\\Users\\User\\Desktop\\Seminar\\htch_work\\uu5\\test\\mocks.js",
+    "ns": "C:\\Users\\User\\Desktop\\Seminar\\htch_work\\uu5\\.tmp\\temp-0.js",
+    "cssns": "C:\\Users\\User\\Desktop\\Seminar\\htch_work\\uu5\\.tmp\\cssns.less"
+  }
+}
