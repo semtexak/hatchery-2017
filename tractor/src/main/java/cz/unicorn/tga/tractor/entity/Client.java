@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Tomáš Bláha
@@ -34,5 +35,7 @@ public class Client {
     @Column(name = "ceil_Phone")
     private String phone;
 
+    @OneToMany(mappedBy = "client")
+    private List<Lending> lendings;
 
 }

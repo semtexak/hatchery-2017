@@ -20,6 +20,7 @@ public class Lending {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "vehicle")
     private Vehicle vehicle;
 
     @Column(name = "lend_from")
@@ -31,6 +32,7 @@ public class Lending {
     private BigDecimal price;
 
     @ManyToOne
+    @JoinColumn(name = "client")
     private Client client;
 
     private Float latitude;

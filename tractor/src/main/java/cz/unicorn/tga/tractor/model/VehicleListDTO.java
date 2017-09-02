@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 
@@ -23,5 +22,6 @@ public class VehicleListDTO implements Serializable {
     private String vin;
     private String vehicleState;
     private Date dateOfAcquisition;
+    private LendingBaseDTO currentLending;
 
 }

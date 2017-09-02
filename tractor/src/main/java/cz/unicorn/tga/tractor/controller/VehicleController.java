@@ -5,12 +5,13 @@ package cz.unicorn.tga.tractor.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
-import cz.unicorn.tga.tractor.entity.Vehicle;
-import cz.unicorn.tga.tractor.model.VehicleFilter;
-import cz.unicorn.tga.tractor.model.VehicleListDTO;
-import cz.unicorn.tga.tractor.model.VehicleNewForm;
+import cz.unicorn.tga.tractor.facade.VehicleFacade;
+import cz.unicorn.tga.tractor.model.*;
+import cz.unicorn.tga.tractor.model.form.StkNewForm;
+import cz.unicorn.tga.tractor.model.form.VehicleNewForm;
+import cz.unicorn.tga.tractor.service.StkManagerService;
+import cz.unicorn.tga.tractor.model.form.VehicleChangeStateForm;
 import cz.unicorn.tga.tractor.web.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -20,7 +21,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import cz.unicorn.tga.tractor.model.VehicleDTO;
 import cz.unicorn.tga.tractor.service.VehicleManagerService;
 import cz.unicorn.tga.tractor.web.CommonConstants;
 
@@ -38,48 +38,65 @@ public class VehicleController {
     @Autowired
     private VehicleManagerService vehicleService;
 
+    @Autowired
+    private StkManagerService stkService;
 
-//    @RequestMapping(method = RequestMethod.GET)
-//    public VehicleDTO[] getAllVehicles(@RequestParam(name = "page", defaultValue = "1") int pageNumber) {
-//        final List<VehicleListDTO> vehicles = vehicleService.getAllVehicles(pageNumber);
-//
-//        return vehicles.toArray(new VehicleDTO[vehicles.size()]);
-//    }
+    @Autowired
+    private VehicleFacade vehicleFacade;
 
-//    @RequestMapping(method = RequestMethod.GET)
-//    public
+
+    @RequestMapping(method = RequestMethod.GET)
+    public Page<VehicleListDTO> getAllVehicles(Pageable pageable) {
+        return vehicleFacade.getAllVehicles(pageable);
+    }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public VehicleDTO getVehicle(@PathVariable Long id) {
+    public VehicleDetailDTO getVehicle(@PathVariable Long id) {
         return vehicleService.getVehicle(id);
     }
 
+    @RequestMapping(value = "/{id}/lendings", method = RequestMethod.GET)
+    public Page<LendingListDTO> getAllLendings(@PathVariable Long id, Pageable pageable) {
+        return vehicleFacade.getAllLendingsForVehicle(id, pageable);
+    }
+
     @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public VehicleDTO[] findByFilter(final VehicleFilter vehicleFilter) {
-
-        // final VehicleFilter filter = new VehicleFilter(id, type, vin, state, priceFrom, priceTo, acquiredFrom, acquiredTo,
-        // lastTechnicalCheckFrom, lastTechnicalCheckTo);
-        final List<VehicleDTO> result = vehicleService.findVehiclesByFilter(vehicleFilter);
-
-        return result.toArray(new VehicleDTO[result.size()]);
+    public Page<VehicleListDTO> findByFilter(final VehicleFilter vehicleFilter, Pageable pageable) {
+        return vehicleFacade.findByFilter(vehicleFilter, pageable);
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public void addNewVehicle(@RequestBody final VehicleNewForm vehicleNewForm) {
-
-        // TODO Validate model
-        vehicleService.createNewVehicle(vehicleNewForm);
-
+        vehicleFacade.createNewVehicle(vehicleNewForm);
         return;
 
     }
 
-    @RequestMapping(value = "/stk", method = RequestMethod.GET)
-    public VehicleDTO[] getAllVehiclesForStk(@RequestParam(name = "page", defaultValue = "1") int pageNumber) {
-        final List<VehicleDTO> vehicles = vehicleService.getVehiclesForStk(pageNumber);
-
-        return vehicles.toArray(new VehicleDTO[vehicles.size()]);
+    @RequestMapping(value = "/{id}/change-state", method = RequestMethod.PUT)
+    public void changeVehicleState(@PathVariable Long id, @RequestBody final VehicleChangeStateForm vehicleChangeStateForm) {
+        vehicleFacade.changeVehicleState(id, vehicleChangeStateForm);
+        return;
     }
+
+
+
+    @RequestMapping(value = "/stk", method = RequestMethod.GET)
+    public Page<VehicleStkListDTO> getAllVehiclesForStk(Pageable pageable) {
+        return vehicleFacade.getVehiclesWhereStkIsNeeded(pageable);
+    }
+
+    @RequestMapping(value = "/stk/search", method = RequestMethod.GET)
+    public Page<VehicleStkListDTO> findByFilter(final StkFilter stkFilter, Pageable pageable) {
+        return vehicleFacade.findByFilter(stkFilter, pageable);
+    }
+
+    @RequestMapping(value = "/stk/create", method = RequestMethod.POST)
+    public void addNewStk(@RequestBody final StkNewForm stkNewForm) {
+        vehicleFacade.createNewStk(stkNewForm);
+        return ;
+
+    }
+
 
     /*
 	 * **********************************************************************

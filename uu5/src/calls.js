@@ -44,8 +44,32 @@ let Calls = {
         Calls.call(GET, commandUri, dtoIn);
     },
 
+    // Vehicle STK
     vehicleStk: function (dtoIn) {
         let commandUri = Calls.getCommandUri("vehicles/stk");
+        Calls.call(GET, commandUri, dtoIn);
+    },
+
+    findVehicleStk: function (dtoIn) {
+        let commandUri = Calls.getCommandUri("vehicles/stk/search");
+        Calls.call(GET, commandUri, dtoIn);
+    },
+
+    addStk: function (dtoIn) {
+        let commandUri = Calls.getCommandUri("vehicles/stk/create");
+        Calls.call(POST, commandUri, dtoIn);
+    },
+
+    // Lending detail
+    findLending: function (dtoIn) {
+        let commandUri = Calls.getCommandUri("lendings/" + dtoIn.data.lendingID);
+        dtoIn.data = undefined;
+        Calls.call(GET, commandUri, dtoIn);
+    },
+
+    loadLendingsForVehicle: function (dtoIn) {
+        let commandUri = Calls.getCommandUri("vehicles/" + dtoIn.data.vehicleID +"/lendings");
+        dtoIn.data = undefined;
         Calls.call(GET, commandUri, dtoIn);
     },
 

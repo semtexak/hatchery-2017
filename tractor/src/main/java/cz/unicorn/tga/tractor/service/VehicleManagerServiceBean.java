@@ -3,17 +3,11 @@
  */
 package cz.unicorn.tga.tractor.service;
 
-import java.util.List;
-
-import cz.unicorn.tga.tractor.controller.ControllerConstants;
 import cz.unicorn.tga.tractor.entity.Vehicle;
-import cz.unicorn.tga.tractor.entity.VehicleRepair;
-import cz.unicorn.tga.tractor.web.ControllerUtils;
-import lombok.val;
+import cz.unicorn.tga.tractor.model.form.VehicleChangeStateForm;
+import cz.unicorn.tga.tractor.model.form.VehicleNewForm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,12 +24,14 @@ import cz.unicorn.tga.tractor.util.*;
 public class VehicleManagerServiceBean implements VehicleManagerService {
 
     private final VehicleDAO vehicleDAO;
+    private final LendingDAO lendingDAO;
     private final VehicleFilterDAO vehicleFilterDAO;
     private final DTOMapper dtoMapper;
 
     @Autowired
-    public VehicleManagerServiceBean(VehicleDAO vehicleDAO, VehicleFilterDAO vehicleFilterDAO, DTOMapper dtoMapper) {
+    public VehicleManagerServiceBean(VehicleDAO vehicleDAO, LendingDAO lendingDAO, VehicleFilterDAO vehicleFilterDAO, DTOMapper dtoMapper) {
         this.vehicleDAO = vehicleDAO;
+        this.lendingDAO = lendingDAO;
         this.vehicleFilterDAO = vehicleFilterDAO;
         this.dtoMapper = dtoMapper;
     }
@@ -90,37 +86,37 @@ public class VehicleManagerServiceBean implements VehicleManagerService {
         return vehicle;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<VehicleDTO> getAllVehicles(Integer page) {
-        PageRequest request = new PageRequest(page - 1, ControllerConstants.ITEMS_PER_PAGE, Sort.Direction.ASC, "id");
 
-        return dtoMapper.convert(vehicleDAO.findAll(request).getContent());
+
+    @Override
+    public Page<VehicleListDTO> findByFilter(VehicleFilter filter, Pageable pageable) {
+        Page<Vehicle> vehiclePage = vehicleFilterDAO.findByFilter(filter, pageable);
+        return new PageImpl<VehicleListDTO>(dtoMapper.toVehicleList(vehiclePage.getContent()), pageable, vehiclePage.getTotalElements());
     }
 
     @Override
-    public List<VehicleDTO> getVehiclesForStk(Integer page) {
-        PageRequest request = new PageRequest(page - 1, ControllerConstants.ITEMS_PER_PAGE, Sort.Direction.ASC, "id");
-
-        List<Vehicle> ff = vehicleDAO.findStkReady();
-        List<VehicleDTO> ok = dtoMapper.convert(vehicleDAO.findStkReady());
-        return dtoMapper.convert(vehicleDAO.findStkReady());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<VehicleDTO> findVehiclesByFilter(final VehicleFilter filter) {
-
-        return dtoMapper.convert(vehicleFilterDAO.findByFilter(filter));
+    public VehicleDetailDTO getVehicle(Long id) {
+        Vehicle vehicle = vehicleDAO.findOne(id);
+        VehicleDetailDTO vehicleDetailDTO = dtoMapper.toVehicleDetailDTO(vehicle);
+        return dtoMapper.toVehicleDetailDTO(vehicleDAO.findOne(id));
     }
 
     @Override
-    public VehicleDTO getVehicle(Long id) {
-        return dtoMapper.convert(vehicleDAO.findOne(id));
+    public Page<VehicleListDTO> getVehicles(Pageable pageable) {
+        PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), Sort.Direction.ASC, "type", "vehicleState");
+        Page<Vehicle> vehiclePage = vehicleDAO.findAll(pageRequest);
+        return new PageImpl<VehicleListDTO>(dtoMapper.toVehicleList(vehiclePage.getContent()), pageable, vehiclePage.getTotalElements());
+    }
+
+    @Override
+    public void changeVehicleState(Long id, VehicleChangeStateForm vehicleChangeStateForm) {
+        Vehicle vehicle = vehicleDAO.findOne(id);
+        VehicleState state = VehicleState.valueOf(vehicleChangeStateForm.getVehicleState());
+        if(state != VehicleState.IN_GARAGE && state != VehicleState.DISABLED) {
+            throw new IllegalArgumentException("Wrong type for VehicleState!");
+        }
+        vehicle.setVehicleState(state);
+
     }
 
 }

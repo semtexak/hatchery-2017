@@ -1,7 +1,7 @@
 import React from "react";
 import * as UU5 from "uu5g04";
 import Cfg from "../core/_config.js";
-import TractorDetail from "./tractor-detail";
+import TractorDetail from "./vehicle-detail";
 
 import Calls from "calls"
 
@@ -25,6 +25,7 @@ export default React.createClass({
         },
         calls: {
             onLoad: "vehicleStk",
+            find: "findVehicleStk"
         }
     },
     //@@viewOff:statics
@@ -49,7 +50,7 @@ export default React.createClass({
         }
 
         return (
-            <UU5.Bricks.Panel header="Přidání nového vozidla" alwaysExpanded={true} disableHeaderClick={true}>
+            <UU5.Bricks.Panel header="Přidání STK vozidla" alwaysExpanded={true} disableHeaderClick={true}>
                 <UU5.Forms.BasicForm ref_={this._handleNewFormReference}>
                     <UU5.Forms.Text name="type" value="RECLAIMER" label="Typ"/>
                     <UU5.Forms.Text name="vin" value="AHTBB3QD001726541" label="VIN"/>
@@ -68,10 +69,25 @@ export default React.createClass({
             <UU5.Forms.BasicForm ref_={this._handleFilterFormReference}>
                 <UU5.Bricks.Row>
                     <UU5.Bricks.Column colWidth="lg-3">
-                        <UU5.Forms.Text name="acquiredFrom" label="Od" controlled={false} value="2007-08-21"/>
+                        {/*<UU5.Forms.Datepicker*/}
+                            {/*name="checkDate"*/}
+                            {/*label="Od"*/}
+                            {/*glyphiconOpened="uu-glyphicon-ok"*/}
+                            {/*glyphiconClosed="glyphicon-calendar"*/}
+                            {/*value="2007-08-21"*/}
+                            {/*format="Y-mm-dd"*/}
+                        {/*/>*/}
+                        <UU5.Forms.Text name="checkDateFrom" label="Od" controlled={false} value="2007-08-21"/>
                     </UU5.Bricks.Column>
                     <UU5.Bricks.Column colWidth="lg-3">
-                        <UU5.Forms.Text name="acquiredTo" label="Do" controlled={false} value="2007-08-23"/>
+                        {/*<UU5.Forms.Datepicker*/}
+                            {/*name="checkDate"*/}
+                            {/*label="Do"*/}
+                            {/*glyphiconOpened="uu-glyphicon-ok"*/}
+                            {/*glyphiconClosed="glyphicon-calendar"*/}
+                            {/*value="2007-08-23"*/}
+                        {/*/>*/}
+                        <UU5.Forms.Text name="checkDateTo" label="Do" controlled={false} value="2007-08-23"/>
                     </UU5.Bricks.Column>
 
                     <UU5.Bricks.Column colWidth="lg-6">
@@ -183,19 +199,20 @@ export default React.createClass({
     },
 
     _handleLoadedTractors(tractors) {
-        if (!tractors || tractors.length === 0) {
+        if (!tractors || tractors.totalElements === 0) {
             return <UU5.Bricks.P>Není tu žádný traktor</UU5.Bricks.P>
         }
+        let vehicles = tractors.content;
 
-        let lines = tractors.map((tractor) => (
-            <UU5.Bricks.Table.Tr key={tractor.id}>
+        let lines = vehicles.map((vehicle) => (
+            <UU5.Bricks.Table.Tr key={vehicle.id}>
                 <UU5.Bricks.Table.Td>
-                    <UU5.Bricks.Link content={tractor.vin} onClick={() => {
-                        UU5.Environment.setRoute(<TractorDetail vehicleID={tractor.id} />);
+                    <UU5.Bricks.Link content={vehicle.vin} onClick={() => {
+                        UU5.Environment.setRoute(<TractorDetail vehicleID={vehicle.id} />);
                     }} />
                 </UU5.Bricks.Table.Td>
-                <UU5.Bricks.Table.Td>{tractor.type}</UU5.Bricks.Table.Td>
-                <UU5.Bricks.Table.Td>{tractor.lastTechnicalCheck.checkDate}</UU5.Bricks.Table.Td>
+                <UU5.Bricks.Table.Td>{vehicle.type}</UU5.Bricks.Table.Td>
+                <UU5.Bricks.Table.Td>{vehicle.checkDate}</UU5.Bricks.Table.Td>
                 <UU5.Bricks.Table.Td></UU5.Bricks.Table.Td>
             </UU5.Bricks.Table.Tr>
         ));
@@ -218,7 +235,7 @@ export default React.createClass({
                 <UU5.Bricks.Pagination
                     ref_={(r) => this._pagination = r}
                     colorSchema='success'
-                    items={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+                    items={Array.from(new Array(tractors.totalPages),(val,index)=>index)}
                     firstGlyphicon='glyphicon-backward'
                     lastGlyphicon='glyphicon-forward'
                     onChanged={(comp, index) => this._handlePaginationClick(index)}

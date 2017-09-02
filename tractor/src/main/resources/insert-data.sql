@@ -682,7 +682,7 @@ INSERT INTO VEHICLE_REPAIR (id,vehicle_id,price,repair_resolution,repaired_at) v
 --------------------------------------------------------
 --  File created - 07-12-2016
 --------------------------------------------------------
-INSERT INTO VEHICLE_MOT (id,vehicle_id,check_date,passed,comment) values ('1','41',PARSEDATETIME('20.11.2005','dd.MM.yyyy'),'Y',null);
+INSERT INTO VEHICLE_MOT (id,vehicle_id,check_date,passed,comment) values ('1','41',PARSEDATETIME('01.11.2016','dd.MM.yyyy'),'Y',null);
 INSERT INTO VEHICLE_MOT (id,vehicle_id,check_date,passed,comment) values ('2','4',PARSEDATETIME('17.06.2004','dd.MM.yyyy'),'N',null);
 INSERT INTO VEHICLE_MOT (id,vehicle_id,check_date,passed,comment) values ('3','30',PARSEDATETIME('15.01.2009','dd.MM.yyyy'),'Y',null);
 INSERT INTO VEHICLE_MOT (id,vehicle_id,check_date,passed,comment) values ('4','35',PARSEDATETIME('18.08.2004','dd.MM.yyyy'),'Y',null);
@@ -691,7 +691,7 @@ INSERT INTO VEHICLE_MOT (id,vehicle_id,check_date,passed,comment) values ('6','6
 INSERT INTO VEHICLE_MOT (id,vehicle_id,check_date,passed,comment) values ('7','23',PARSEDATETIME('08.06.2001','dd.MM.yyyy'),'Y',null);
 INSERT INTO VEHICLE_MOT (id,vehicle_id,check_date,passed,comment) values ('8','93',PARSEDATETIME('16.05.2009','dd.MM.yyyy'),'Y',null);
 INSERT INTO VEHICLE_MOT (id,vehicle_id,check_date,passed,comment) values ('9','67',PARSEDATETIME('02.09.2015','dd.MM.yyyy'),'Y',null);
-INSERT INTO VEHICLE_MOT (id,vehicle_id,check_date,passed,comment) values ('10','95',PARSEDATETIME('20.12.2009','dd.MM.yyyy'),'Y',null);
+INSERT INTO VEHICLE_MOT (id,vehicle_id,check_date,passed,comment) values ('10','95',PARSEDATETIME('03.11.2016','dd.MM.yyyy'),'Y',null);
 INSERT INTO VEHICLE_MOT (id,vehicle_id,check_date,passed,comment) values ('11','56',PARSEDATETIME('08.12.2015','dd.MM.yyyy'),'N',null);
 INSERT INTO VEHICLE_MOT (id,vehicle_id,check_date,passed,comment) values ('12','94',PARSEDATETIME('17.02.2003','dd.MM.yyyy'),'Y',null);
 INSERT INTO VEHICLE_MOT (id,vehicle_id,check_date,passed,comment) values ('13','56',PARSEDATETIME('12.09.1999','dd.MM.yyyy'),'Y',null);
@@ -4714,3 +4714,7 @@ INSERT INTO LENDING (id,vehicle,lend_from,lend_to,price,client,latitude,longitud
 UPDATE VEHICLE SET last_technical_check = 1 WHERE id = 2;
 UPDATE VEHICLE SET last_technical_check = 10 WHERE id = 4;
 UPDATE VEHICLE SET last_technical_check = 3 WHERE id = 5;
+
+UPDATE VEHICLE SET current_lending = 559 WHERE id = 2;
+UPDATE VEHICLE SET current_lending = 800 WHERE id = 4;
+UPDATE VEHICLE SET current_lending = 900 WHERE id = 5;

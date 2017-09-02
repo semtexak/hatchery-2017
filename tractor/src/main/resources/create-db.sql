@@ -9,13 +9,14 @@
 
 
 CREATE SEQUENCE hibernate_seq start with 10000;
-CREATE SEQUENCE SEQ_VEHICLE_ID start with 1;
+CREATE SEQUENCE SEQ_VEHICLE_ID start with 106;
 
 create table VEHICLE (
   id number(20,0) not null,
   VIN CHAR(17 CHAR) not null,
   type varchar2(20 char) not null,
   date_of_acquisition date not null,
+  current_lending number(20, 0),
   last_technical_check number(20, 0),
   nickname VARCHAR2(50 char),
   state_type varchar2(20 char) not null,
@@ -86,4 +87,5 @@ create table USER (
   constraint chk_user_001 check (role in  ('ADMIN', 'EMPLOYEE'))
 );
 
-ALTER TABLE VEHICLE ADD constraint FK_Vehicle_Mot FOREIGN key (last_technical_check) REFERENCES VEHICLE_MOT (id)
+ALTER TABLE VEHICLE ADD constraint FK_Lending FOREIGN key (current_lending) REFERENCES LENDING (id);
+ALTER TABLE VEHICLE ADD constraint FK_Vehicle_Mot FOREIGN key (last_technical_check) REFERENCES VEHICLE_MOT (id);

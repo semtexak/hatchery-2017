@@ -2,8 +2,9 @@ import React from "react";
 import * as UU5 from "uu5g04";
 import Cfg from "./_config.js";
 
-import TractorList from "../vuc/tractor-list.js"
-import TractorDetail from "../vuc/tractor-detail.js"
+import VehicleList from "../vuc/vehicle-list.js"
+import VehicleDetail from "../vuc/vehicle-detail.js"
+import LendingDetail from "../vuc/lending-detail.js"
 import VehicleStkList from "../vuc/vehicle-stk-list.js"
 import About from "../vuc/about.js"
 
@@ -58,9 +59,10 @@ export default React.createClass({
         <UU5.Common.Router
           route="/"
           routes={{
-            "/": {component: <TractorList />},
+            "/": {component: <VehicleList />},
             "/about": {component: <About/>},
-            "/vehicles": {component: <TractorDetail/>},
+            "/vehicles": {component: <VehicleList/>},
+            "/lendings": {component: <LendingDetail/>},
             "/stk": {component: <VehicleStkList/>},
           }}
           basePath={routerBasePath}

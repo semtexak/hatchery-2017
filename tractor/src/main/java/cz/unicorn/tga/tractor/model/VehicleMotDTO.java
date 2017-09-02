@@ -16,7 +16,7 @@ public class VehicleMotDTO implements Serializable {
 
     private Long id;
     private Date checkDate;
-    private Vehicle vehicle;
+    private String comment;
     private char passed;
 
 }

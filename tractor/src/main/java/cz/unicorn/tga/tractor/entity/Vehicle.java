@@ -44,7 +44,11 @@ public class Vehicle {
 
     @ManyToOne
     @JoinColumn(name="last_technical_check", nullable=true)
-    private Vehicle lastTechnicalCheck;
+    private VehicleMot lastTechnicalCheck;
+
+    @ManyToOne
+    @JoinColumn(name="current_lending", nullable=true)
+    private Lending currentLending;
 
     private BigDecimal price;
 
@@ -55,5 +59,8 @@ public class Vehicle {
 
     @OneToMany(mappedBy = "vehicle")
     private List<VehicleMot> vehicleMots;
+
+    @OneToMany(mappedBy = "vehicle")
+    private List<Lending> lendings;
 
 }
