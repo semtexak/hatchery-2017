@@ -29,10 +29,10 @@ public class VehicleFilterDAOImpl extends GenericHibernateDAO<Vehicle,Long> impl
 		builder.appendIfNotNull("AND c.state = :state", "state", filter.getState());
 		builder.appendIfNotNull("AND c.dateOfAcquisition >= :acquiredFrom", "acquiredFrom", filter.getAcquiredFrom());
 		builder.appendIfNotNull("AND c.dateOfAcquisition <= :acquiredTo", "acquiredTo", filter.getAcquiredTo());
-		builder.appendIfNotNull("AND c.dateOfLastTechnicalCheck >= :checkFrom", "checkFrom",
-				filter.getLastTechnicalCheckFrom());
-		builder.appendIfNotNull("AND c.dateOfLastTechnicalCheck <= :checkTo", "checkTo",
-				filter.getLastTechnicalCheckTo());
+//		builder.appendIfNotNull("AND c.dateOfLastTechnicalCheck >= :checkFrom", "checkFrom",
+//				filter.getLastTechnicalCheckFrom());
+//		builder.appendIfNotNull("AND c.dateOfLastTechnicalCheck <= :checkTo", "checkTo",
+//				filter.getLastTechnicalCheckTo());
 		builder.appendIfNotNull("AND c.price >= :priceFrom", "priceFrom", filter.getPriceFrom());
 		builder.appendIfNotNull("AND c.price <= :priceTo", "priceTo", filter.getPriceTo());
 

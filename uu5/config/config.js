@@ -11,7 +11,7 @@ module.exports.getConfig = function () {
   let infix = (isProductionBuild ? ".min" : "");
   
   let srcDir = "src";
-  let useMockData = true;
+  let useMockData = false;
   let config = {
     isProductionBuild: isProductionBuild,
     useMockData: useMockData,

@@ -28,6 +28,10 @@ export default React.createClass({
       about: {
         cs: "O půjčovně",
         en: "About"
+      },
+      stk: {
+        cs: "STK",
+        en: "STK"
       }
     }
   },
@@ -43,10 +47,11 @@ export default React.createClass({
   render(){
     return (
       <UU5.Bricks.Div {...this.getMainPropsToPass()}>
-        <UU5.Bricks.Header level={1}>{this.getLSIItem(Cfg.titleLsi)}</UU5.Bricks.Header>
+        {/*<UU5.Bricks.Header level={1}>{this.getLSIItem(Cfg.titleLsi)}</UU5.Bricks.Header>*/}
 
         <nav>
           <UU5.Bricks.Link href="/" onClick={this._handleLinkClick}>{this.getLSIValue("list")}</UU5.Bricks.Link>
+          <UU5.Bricks.Link href="/stk" onClick={this._handleLinkClick}>{this.getLSIValue("stk")}</UU5.Bricks.Link>
           <UU5.Bricks.Link href="/about" onClick={this._handleLinkClick}>{this.getLSIValue("about")}</UU5.Bricks.Link>
         </nav>
       </UU5.Bricks.Div>

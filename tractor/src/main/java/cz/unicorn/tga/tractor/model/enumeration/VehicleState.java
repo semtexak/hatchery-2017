@@ -1,6 +1,3 @@
-/**
- * 
- */
 package cz.unicorn.tga.tractor.model.enumeration;
 
 /**

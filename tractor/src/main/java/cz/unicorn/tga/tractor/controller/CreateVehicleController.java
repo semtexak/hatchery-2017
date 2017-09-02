@@ -12,8 +12,8 @@ import cz.unicorn.tga.tractor.web.*;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping(value = AddNewVehicleController.BASE_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-public class AddNewVehicleController {
+@RequestMapping(value = CreateVehicleController.BASE_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+public class CreateVehicleController {
 
 	public static final String BASE_URL = CommonConstants.SLASH + "vehicles/new";
 	public final static String FORM_ATTRIBUTE_NAME = "vehicleNewForm";
@@ -43,7 +43,7 @@ public class AddNewVehicleController {
 	 * **********************************************************************
 	 */
 
-	@InitBinder(AddNewVehicleController.FORM_ATTRIBUTE_NAME)
+	@InitBinder(CreateVehicleController.FORM_ATTRIBUTE_NAME)
 	protected void initBinder(final WebDataBinder binder) {
 
 		// BigDecimal custom binder

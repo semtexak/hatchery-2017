@@ -69,7 +69,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "5a07488af2b0562dc0ca"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "af56bd57b4ddd63e64f0"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
@@ -10967,106 +10967,6 @@ module.exports = function (updatedModules, renewedModules) {
 
 /***/ }),
 
-/***/ "../test/http-client.js":
-/* unknown exports provided */
-/* all exports used */
-/*!******************************!*\
-  !*** ../test/http-client.js ***!
-  \******************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var HttpClient = {
-  get: function get(url, successFn, failureFn) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url, true);
-    xhr.withCredentials = true;
-    xhr.setRequestHeader("Accept", "application/json");
-    xhr.onreadystatechange = function (e) {
-      if (xhr.readyState == 4) {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          try {
-            var json = xhr.responseText ? JSON.parse(xhr.responseText) : null;
-            successFn(json);
-          } catch (err) {
-            failureFn(err);
-          }
-        } else {
-          failureFn(new Error("Server responded with status " + xhr.status));
-        }
-      }
-    };
-    xhr.send(null);
-  }
-};
-
-exports.default = HttpClient;
-
-/***/ }),
-
-/***/ "../test/mocks.js":
-/* unknown exports provided */
-/* all exports used */
-/*!************************!*\
-  !*** ../test/mocks.js ***!
-  \************************/
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _calls = __webpack_require__(/*! ../src/calls.js */ "./calls.js");
-
-var _calls2 = _interopRequireDefault(_calls);
-
-var _httpClient = __webpack_require__(/*! ./http-client.js */ "../test/http-client.js");
-
-var _httpClient2 = _interopRequireDefault(_httpClient);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var appAssetsBaseUri = (document.baseURI || (document.querySelector("base") || {}).href || location.protocol + "//" + location.host + location.pathname).replace(/^(.*)\/.*$/, "$1/"); // strip what's after last slash
-
-/**
- * Mocks
- */
-_calls2.default.call = function (method, url, dtoIn) {
-  var mockUrl = appAssetsBaseUri + "test/data/" + url + ".json";
-  _httpClient2.default.get(mockUrl, function (response) {
-    setTimeout(function () {
-      return dtoIn.done(response);
-    }, 500);
-  }, function (error) {
-    dtoIn.fail(error);
-  });
-};
-
-_calls2.default.getCommandUri = function (aUseCase) {
-  return aUseCase;
-};
-
-_calls2.default.authorizeVuc = function (dtoIn) {
-  var mockUrl = appAssetsBaseUri + "test/authorization/" + dtoIn.data.name + ".json";
-  _httpClient2.default.get(mockUrl, function (response) {
-    dtoIn.done(response);
-  }, function (error) {
-    dtoIn.fail(error);
-  });
-};
-
-exports.default = _calls2.default;
-
-/***/ }),
-
 /***/ "./calls.js":
 /* unknown exports provided */
 /* all exports used */
@@ -11079,7 +10979,7 @@ exports.default = _calls2.default;
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _uu_appg01_core = __webpack_require__(/*! uu_appg01_core */ 5);
@@ -11094,39 +10994,52 @@ var GET = "get";
 
 var Calls = {
 
-  call: function call(method, url, dtoIn) {
-    _uu_appg.Client[method](url, dtoIn.data).then(function (response) {
-      console.info(response.data);
-      dtoIn.done(response.data);
-    }, function (response) {
-      console.info(response.error);
-      dtoIn.fail(response);
-    });
-  },
+    call: function call(method, url, dtoIn) {
+        _uu_appg.Client[method](url, dtoIn.data).then(function (response) {
+            console.info(response.data);
+            dtoIn.done(response.data);
+        }, function (response) {
+            console.info(response.error);
+            dtoIn.fail(response);
+        });
+    },
 
-  cars: function cars(dtoIn) {
-    var commandUri = Calls.getCommandUri("cars");
-    Calls.call(GET, commandUri, dtoIn);
-  },
+    cars: function cars(dtoIn) {
+        var commandUri = Calls.getCommandUri("vehicles");
 
-  findCars: function findCars(dtoIn) {
-    var commandUri = Calls.getCommandUri("cars/find");
-    Calls.call(GET, commandUri, dtoIn);
-  },
+        Calls.call(GET, commandUri, dtoIn);
+    },
 
-  addCar: function addCar(dtoIn) {
-    var commandUri = Calls.getCommandUri("cars/new");
-    Calls.call(POST, commandUri, dtoIn);
-  },
+    findCars: function findCars(dtoIn) {
+        var commandUri = Calls.getCommandUri("vehicles/search");
+        Calls.call(GET, commandUri, dtoIn);
+    },
 
-  getCommandUri: function getCommandUri(aUseCase) {
-    // useCase <=> "/getSomething" or "/sys/getSomething"
-    var useCase = !aUseCase.match(/^\//) ? "/" + aUseCase : aUseCase;
-    // let baseUri = location.protocol + "//" + location.host + location.pathname;
-    var baseUri = "http://localhost:7070/car-evidence";
-    console.info("######## INFO ####### " + baseUri + useCase);
-    return baseUri + useCase;
-  }
+    addCar: function addCar(dtoIn) {
+        var commandUri = Calls.getCommandUri("vehicles/create");
+        Calls.call(POST, commandUri, dtoIn);
+    },
+
+    // Vehicle detail
+    findVehicle: function findVehicle(dtoIn) {
+        var commandUri = Calls.getCommandUri("vehicles/" + dtoIn.data.vehicleID);
+        dtoIn.data = undefined;
+        Calls.call(GET, commandUri, dtoIn);
+    },
+
+    vehicleStk: function vehicleStk(dtoIn) {
+        var commandUri = Calls.getCommandUri("vehicles/stk");
+        Calls.call(GET, commandUri, dtoIn);
+    },
+
+    getCommandUri: function getCommandUri(aUseCase) {
+        // useCase <=> "/getSomething" or "/sys/getSomething"
+        var useCase = !aUseCase.match(/^\//) ? "/" + aUseCase : aUseCase;
+        // let baseUri = location.protocol + "//" + location.host + location.pathname;
+        var baseUri = "http://localhost:7070/vehicle-evidence";
+        // console.info("######## INFO ####### " + baseUri + useCase);
+        return baseUri + useCase;
+    }
 
 };
 
@@ -11226,6 +11139,10 @@ exports.default = _react2.default.createClass({
       about: {
         cs: "O půjčovně",
         en: "About"
+      },
+      stk: {
+        cs: "STK",
+        en: "STK"
       }
     }
   },
@@ -11244,17 +11161,17 @@ exports.default = _react2.default.createClass({
       UU5.Bricks.Div,
       this.getMainPropsToPass(),
       _react2.default.createElement(
-        UU5.Bricks.Header,
-        { level: 1 },
-        this.getLSIItem(_config2.default.titleLsi)
-      ),
-      _react2.default.createElement(
         "nav",
         null,
         _react2.default.createElement(
           UU5.Bricks.Link,
           { href: "/", onClick: this._handleLinkClick },
           this.getLSIValue("list")
+        ),
+        _react2.default.createElement(
+          UU5.Bricks.Link,
+          { href: "/stk", onClick: this._handleLinkClick },
+          this.getLSIValue("stk")
         ),
         _react2.default.createElement(
           UU5.Bricks.Link,
@@ -11340,6 +11257,14 @@ var _tractorList = __webpack_require__(/*! ../vuc/tractor-list.js */ "./vuc/trac
 
 var _tractorList2 = _interopRequireDefault(_tractorList);
 
+var _tractorDetail = __webpack_require__(/*! ../vuc/tractor-detail.js */ "./vuc/tractor-detail.js");
+
+var _tractorDetail2 = _interopRequireDefault(_tractorDetail);
+
+var _vehicleStkList = __webpack_require__(/*! ../vuc/vehicle-stk-list.js */ "./vuc/vehicle-stk-list.js");
+
+var _vehicleStkList2 = _interopRequireDefault(_vehicleStkList);
+
 var _about = __webpack_require__(/*! ../vuc/about.js */ "./vuc/about.js");
 
 var _about2 = _interopRequireDefault(_about);
@@ -11402,7 +11327,9 @@ exports.default = _react2.default.createClass({
         route: "/",
         routes: {
           "/": { component: _react2.default.createElement(_tractorList2.default, null) },
-          "/about": { component: _react2.default.createElement(_about2.default, null) }
+          "/about": { component: _react2.default.createElement(_about2.default, null) },
+          "/vehicles": { component: _react2.default.createElement(_tractorDetail2.default, null) },
+          "/stk": { component: _react2.default.createElement(_vehicleStkList2.default, null) }
         },
         basePath: routerBasePath
       })
@@ -11637,19 +11564,19 @@ if(true) {
 
 /***/ }),
 
-/***/ "./vuc/tractor-list.js":
+/***/ "./vuc/tractor-detail.js":
 /* unknown exports provided */
 /* all exports used */
-/*!*****************************!*\
-  !*** ./vuc/tractor-list.js ***!
-  \*****************************/
+/*!*******************************!*\
+  !*** ./vuc/tractor-detail.js ***!
+  \*******************************/
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _react = __webpack_require__(/*! react */ 0);
@@ -11664,7 +11591,7 @@ var _config = __webpack_require__(/*! ../core/_config.js */ "./core/_config.js")
 
 var _config2 = _interopRequireDefault(_config);
 
-var _calls = __webpack_require__(/*! calls */ "../test/mocks.js");
+var _calls = __webpack_require__(/*! calls */ "./calls.js");
 
 var _calls2 = _interopRequireDefault(_calls);
 
@@ -11673,278 +11600,956 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = _react2.default.createClass({
-  displayName: "tractor-list",
+    displayName: "tractor-detail",
 
 
-  //@@viewOn:mixins
-  mixins: [UU5.Common.BaseMixin, UU5.Common.ElementaryMixin, UU5.Common.RouteMixin, UU5.Common.LoadMixin],
-  //@@viewOff:mixins
+    //@@viewOn:mixins
+    mixins: [UU5.Common.BaseMixin, UU5.Common.ElementaryMixin, UU5.Common.RouteMixin, UU5.Common.LoadMixin, UU5.Common.CcrReaderMixin],
+    //@@viewOff:mixins
 
-  //@@viewOn:statics
-  statics: {
-    tagName: _config2.default.APP + ".TractorList",
-    classNames: {
-      main: _config2.default.CSS + "-tractor-list"
+    //@@viewOn:statics
+    statics: {
+        tagName: _config2.default.APP + ".TractorList",
+        classNames: {
+            main: _config2.default.CSS + "-tractor-list"
+        },
+        calls: {
+            onLoad: "findVehicle"
+        }
     },
-    calls: {
-      onLoad: "cars",
-      create: "addCar",
-      find: "findCars"
+    //@@viewOff:statics
+
+    //@@viewOn:standardComponentLifeCycle
+    getInitialState: function getInitialState() {
+        return {
+            vehicleID: 0
+        };
+    },
+    componentWillMount: function componentWillMount() {
+        this.setCalls(_calls2.default);
+    },
+
+    //@@viewOff:standardComponentLifeCycle
+
+    //@@viewOn:componentSpecificHelpers
+
+    getOnLoadData_: function getOnLoadData_() {
+        return {
+            vehicleID: this.props.vehicleID
+        };
+    },
+    _handleLinkClick: function _handleLinkClick(link) {
+        this.getCcrComponentByKey(UU5.Environment.CCRKEY_ROUTER).setRoute(link.props.href);
+    },
+    _formatPanelHeader: function _formatPanelHeader(vehicle) {
+        return vehicle.vin + (vehicle.nickname ? "(" + vehicle.nickname + ")" : "");
+    },
+    _handleLoadedVehicle: function _handleLoadedVehicle(vehicle) {
+        return _react2.default.createElement(
+            UU5.Bricks.Div,
+            null,
+            _react2.default.createElement(
+                UU5.Bricks.Panel,
+                { header: this._formatPanelHeader(vehicle), alwaysExpanded: true, disableHeaderClick: true },
+                _react2.default.createElement(
+                    UU5.Bricks.Table,
+                    { striped: true },
+                    _react2.default.createElement(
+                        UU5.Bricks.Table.THead,
+                        null,
+                        _react2.default.createElement(UU5.Bricks.Table.Tr, null)
+                    ),
+                    _react2.default.createElement(
+                        UU5.Bricks.Table.TBody,
+                        null,
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Tr,
+                            null,
+                            _react2.default.createElement(
+                                UU5.Bricks.Table.Td,
+                                null,
+                                _react2.default.createElement(
+                                    "strong",
+                                    null,
+                                    "Typ:"
+                                )
+                            ),
+                            _react2.default.createElement(
+                                UU5.Bricks.Table.Td,
+                                null,
+                                vehicle.type
+                            )
+                        ),
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Tr,
+                            null,
+                            _react2.default.createElement(
+                                UU5.Bricks.Table.Td,
+                                null,
+                                _react2.default.createElement(
+                                    "strong",
+                                    null,
+                                    "VIN:"
+                                )
+                            ),
+                            _react2.default.createElement(
+                                UU5.Bricks.Table.Td,
+                                null,
+                                vehicle.vin
+                            )
+                        ),
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Tr,
+                            null,
+                            _react2.default.createElement(
+                                UU5.Bricks.Table.Td,
+                                null,
+                                _react2.default.createElement(
+                                    "strong",
+                                    null,
+                                    "Stav:"
+                                )
+                            ),
+                            _react2.default.createElement(
+                                UU5.Bricks.Table.Td,
+                                null,
+                                vehicle.vehicleState
+                            )
+                        ),
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Tr,
+                            null,
+                            _react2.default.createElement(
+                                UU5.Bricks.Table.Td,
+                                null,
+                                _react2.default.createElement(
+                                    "strong",
+                                    null,
+                                    "Datum po\u0159\xEDzen\xED:"
+                                )
+                            ),
+                            _react2.default.createElement(
+                                UU5.Bricks.Table.Td,
+                                null,
+                                vehicle.dateOfAcquisition
+                            )
+                        ),
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Tr,
+                            null,
+                            _react2.default.createElement(
+                                UU5.Bricks.Table.Td,
+                                null,
+                                _react2.default.createElement(
+                                    "strong",
+                                    null,
+                                    "Cena:"
+                                )
+                            ),
+                            _react2.default.createElement(
+                                UU5.Bricks.Table.Td,
+                                null,
+                                vehicle.price
+                            )
+                        )
+                    )
+                )
+            ),
+            _react2.default.createElement(
+                UU5.Bricks.Table,
+                { striped: true },
+                _react2.default.createElement(
+                    UU5.Bricks.Table.THead,
+                    null,
+                    _react2.default.createElement(
+                        UU5.Bricks.Table.Tr,
+                        null,
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Th,
+                            null,
+                            "VIN"
+                        ),
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Th,
+                            null,
+                            "Typ"
+                        ),
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Th,
+                            null,
+                            "St\xE1\u0159\xED"
+                        ),
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Th,
+                            null,
+                            "Stav"
+                        ),
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Th,
+                            null,
+                            "Klient"
+                        ),
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Th,
+                            null,
+                            "Akce"
+                        )
+                    )
+                ),
+                _react2.default.createElement(UU5.Bricks.Table.TBody, null)
+            )
+        );
+    },
+
+    //@@viewOff:componentSpecificHelpers
+
+    //@@viewOn:render
+    render: function render() {
+        return _react2.default.createElement(
+            UU5.Bricks.Div,
+            null,
+            _react2.default.createElement(
+                UU5.Bricks.Header,
+                { level: 2 },
+                "Detail vozidla"
+            ),
+            this.getLoadFeedbackChildren(this._handleLoadedVehicle)
+        );
     }
-  },
-  //@@viewOff:statics
+    //@@viewOff:render
 
-  //@@viewOn:standardComponentLifeCycle
-  getInitialState: function getInitialState() {
-    return {
-      showForm: false,
-      filtered: false
-    };
-  },
-  componentWillMount: function componentWillMount() {
-    this.setCalls(_calls2.default);
-  },
+});
 
-  //@@viewOff:standardComponentLifeCycle
+/***/ }),
 
-  //@@viewOn:componentSpecificHelpers
-  _getNewForm: function _getNewForm() {
-    if (!this.state.showForm) {
-      return null;
-    }
+/***/ "./vuc/tractor-list.js":
+/* unknown exports provided */
+/* all exports used */
+/*!*****************************!*\
+  !*** ./vuc/tractor-list.js ***!
+  \*****************************/
+/***/ (function(module, exports, __webpack_require__) {
 
-    return _react2.default.createElement(
-      UU5.Bricks.Panel,
-      { header: "P\u0159id\xE1n\xED nov\xE9ho vozidla", alwaysExpanded: true, disableHeaderClick: true },
-      _react2.default.createElement(
-        UU5.Forms.BasicForm,
-        { ref_: this._handleNewFormReference },
-        _react2.default.createElement(UU5.Forms.Text, { name: "type", value: "RECLAIMER", label: "Typ" }),
-        _react2.default.createElement(UU5.Forms.Text, { name: "vin", value: "AHTBB3QD001726541", label: "VIN" }),
-        _react2.default.createElement(UU5.Forms.Text, { name: "date", value: "1487812893", label: "Datum" }),
-        _react2.default.createElement(UU5.Forms.Text, { name: "price", value: "1100000", label: "Cena" })
-      ),
-      _react2.default.createElement(
-        UU5.Bricks.Button,
-        { colorSchema: "warning", onClick: this._handleCancelClick },
-        "Zav\u0159\xEDt"
-      ),
-      _react2.default.createElement(
-        UU5.Bricks.Button,
-        { colorSchema: "primary", onClick: this._handleCreateNewCar },
-        "Ulo\u017Eit"
-      )
-    );
-  },
-  _getFilterForm: function _getFilterForm() {
-    return _react2.default.createElement(
-      UU5.Forms.BasicForm,
-      { ref_: this._handleFilterFormReference },
-      _react2.default.createElement(
-        UU5.Bricks.Row,
-        null,
-        _react2.default.createElement(
-          UU5.Bricks.Column,
-          { colWidth: "lg-3" },
-          _react2.default.createElement(UU5.Forms.Text, { name: "acquiredFrom", label: "Od", controlled: false, value: "2007-08-21" })
-        ),
-        _react2.default.createElement(
-          UU5.Bricks.Column,
-          { colWidth: "lg-3" },
-          _react2.default.createElement(UU5.Forms.Text, { name: "acquiredTo", label: "Do", controlled: false, value: "2007-08-23" })
-        ),
-        _react2.default.createElement(
-          UU5.Bricks.Column,
-          { colWidth: "lg-6" },
-          _react2.default.createElement(UU5.Bricks.Button, { content: "Filtruj", onClick: this._handleFilterClick }),
-          _react2.default.createElement(UU5.Bricks.Button, {
-            colorSchema: "warning",
-            disabled: !this.state.filtered,
-            content: "Zru\u0161 filtr",
-            onClick: this._handleCancelFilter
-          })
-        )
-      )
-    );
-  },
-  _getPanelHeader: function _getPanelHeader() {
-    var button = !this.state.showForm && _react2.default.createElement(
-      UU5.Bricks.Button,
-      { size: "xs", onClick: this._handleShowFormClick, className: "pull-right" },
-      "P\u0159idat"
-    );
+"use strict";
 
-    return _react2.default.createElement(
-      UU5.Bricks.Div,
-      null,
-      "Seznam vozidel ",
-      button
-    );
-  },
-  _handleNewFormReference: function _handleNewFormReference(form) {
-    this._addForm = form;
-  },
-  _handleFilterFormReference: function _handleFilterFormReference(form) {
-    this._filterForm = form;
-  },
-  _handleCreateNewCar: function _handleCreateNewCar() {
-    var _this = this;
 
-    var formData = this._addForm.getValues();
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
 
-    // hide form and show loading
-    this.setState({
-      loadFeedback: "loading",
-      showForm: false
-    }, function () {
-      _this.getCall("create")({
-        data: formData,
-        done: function done() {
-          _this.reload();
+var _react = __webpack_require__(/*! react */ 0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _uu5g = __webpack_require__(/*! uu5g04 */ 1);
+
+var UU5 = _interopRequireWildcard(_uu5g);
+
+var _config = __webpack_require__(/*! ../core/_config.js */ "./core/_config.js");
+
+var _config2 = _interopRequireDefault(_config);
+
+var _tractorDetail = __webpack_require__(/*! ./tractor-detail */ "./vuc/tractor-detail.js");
+
+var _tractorDetail2 = _interopRequireDefault(_tractorDetail);
+
+var _calls = __webpack_require__(/*! calls */ "./calls.js");
+
+var _calls2 = _interopRequireDefault(_calls);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = _react2.default.createClass({
+    displayName: "tractor-list",
+
+
+    //@@viewOn:mixins
+    mixins: [UU5.Common.BaseMixin, UU5.Common.ElementaryMixin, UU5.Common.RouteMixin, UU5.Common.LoadMixin, UU5.Common.CcrReaderMixin],
+    //@@viewOff:mixins
+
+    //@@viewOn:statics
+    statics: {
+        tagName: _config2.default.APP + ".TractorList",
+        classNames: {
+            main: _config2.default.CSS + "-tractor-list"
         },
-        fail: function fail(response) {
-          return console.error(response);
+        calls: {
+            onLoad: "cars",
+            create: "addCar",
+            find: "findCars"
         }
-      });
-    });
+    },
+    //@@viewOff:statics
 
-    // clear up reference
-    this._addForm = undefined;
-  },
-  _handleCancelFilter: function _handleCancelFilter() {
-    var _this2 = this;
+    //@@viewOn:standardComponentLifeCycle
+    getInitialState: function getInitialState() {
+        return {
+            showForm: false,
+            filtered: false,
+            actual: 0
+        };
+    },
+    componentWillMount: function componentWillMount() {
+        this.setCalls(_calls2.default);
+    },
 
-    this.setState({
-      loadFeedback: "loading",
-      filtered: false
-    }, function () {
-      return _this2.reload();
-    });
-  },
-  _handleShowFormClick: function _handleShowFormClick() {
-    this.setState({ showForm: true });
-  },
-  _handleCancelClick: function _handleCancelClick() {
-    this.setState({ showForm: false });
-  },
-  _handleFilterClick: function _handleFilterClick() {
-    var _this3 = this;
+    //@@viewOff:standardComponentLifeCycle
 
-    this.setState({
-      loadFeedback: "loading"
-    }, function () {
-      _this3.getCall("find")({
-        data: _this3._filterForm.getValues(),
-        done: function done(data) {
-          _this3.setState({
-            dtoOut: data,
-            loadFeedback: "ready",
-            filtered: true
-          });
-        },
-        fail: function fail(response) {
-          return console.error(response);
+    //@@viewOn:componentSpecificHelpers
+    _getNewForm: function _getNewForm() {
+        if (!this.state.showForm) {
+            return null;
         }
-      });
-    });
-  },
-  _handleLoadedTractors: function _handleLoadedTractors(tractors) {
-    if (!tractors || tractors.length === 0) {
-      return _react2.default.createElement(
-        UU5.Bricks.P,
-        null,
-        "Nen\xED tu \u017E\xE1dn\xFD traktor"
-      );
+
+        return _react2.default.createElement(
+            UU5.Bricks.Panel,
+            { header: "P\u0159id\xE1n\xED nov\xE9ho vozidla", alwaysExpanded: true, disableHeaderClick: true },
+            _react2.default.createElement(
+                UU5.Forms.BasicForm,
+                { ref_: this._handleNewFormReference },
+                _react2.default.createElement(UU5.Forms.Text, { name: "type", value: "RECLAIMER", label: "Typ" }),
+                _react2.default.createElement(UU5.Forms.Text, { name: "vin", value: "AHTBB3QD001726541", label: "VIN" }),
+                _react2.default.createElement(UU5.Forms.Text, { name: "date", value: "1487812893", label: "Datum" }),
+                _react2.default.createElement(UU5.Forms.Text, { name: "price", value: "1100000", label: "Cena" })
+            ),
+            _react2.default.createElement(
+                UU5.Bricks.Button,
+                { colorSchema: "warning", onClick: this._handleCancelClick },
+                "Zav\u0159\xEDt"
+            ),
+            _react2.default.createElement(
+                UU5.Bricks.Button,
+                { colorSchema: "primary", onClick: this._handleCreateNewCar },
+                "Ulo\u017Eit"
+            )
+        );
+    },
+    _getFilterForm: function _getFilterForm() {
+        return _react2.default.createElement(
+            UU5.Forms.BasicForm,
+            { ref_: this._handleFilterFormReference },
+            _react2.default.createElement(
+                UU5.Bricks.Row,
+                null,
+                _react2.default.createElement(
+                    UU5.Bricks.Column,
+                    { colWidth: "lg-3" },
+                    _react2.default.createElement(UU5.Forms.Text, { name: "acquiredFrom", label: "Od", controlled: false, value: "2007-08-21" })
+                ),
+                _react2.default.createElement(
+                    UU5.Bricks.Column,
+                    { colWidth: "lg-3" },
+                    _react2.default.createElement(UU5.Forms.Text, { name: "acquiredTo", label: "Do", controlled: false, value: "2007-08-23" })
+                ),
+                _react2.default.createElement(
+                    UU5.Bricks.Column,
+                    { colWidth: "lg-6" },
+                    _react2.default.createElement(UU5.Bricks.Button, { content: "Filtruj", onClick: this._handleFilterClick }),
+                    _react2.default.createElement(UU5.Bricks.Button, {
+                        colorSchema: "warning",
+                        disabled: !this.state.filtered,
+                        content: "Zru\u0161 filtr",
+                        onClick: this._handleCancelFilter
+                    })
+                )
+            )
+        );
+    },
+    _getPanelHeader: function _getPanelHeader() {
+        var button = !this.state.showForm && _react2.default.createElement(
+            UU5.Bricks.Button,
+            { size: "xs", onClick: this._handleShowFormClick,
+                className: "pull-right" },
+            "P\u0159idat"
+        );
+
+        return _react2.default.createElement(
+            UU5.Bricks.Div,
+            null,
+            "Seznam vozidel ",
+            button
+        );
+    },
+    _handleNewFormReference: function _handleNewFormReference(form) {
+        this._addForm = form;
+    },
+    _handleFilterFormReference: function _handleFilterFormReference(form) {
+        this._filterForm = form;
+    },
+    _handleCreateNewCar: function _handleCreateNewCar() {
+        var _this = this;
+
+        var formData = this._addForm.getValues();
+
+        // hide form and show loading
+        this.setState({
+            loadFeedback: "loading",
+            showForm: false
+        }, function () {
+            _this.getCall("create")({
+                data: formData,
+                done: function done() {
+                    _this.reload();
+                },
+                fail: function fail(response) {
+                    return console.error(response);
+                }
+            });
+        });
+
+        // clear up reference
+        this._addForm = undefined;
+    },
+    _handleCancelFilter: function _handleCancelFilter() {
+        var _this2 = this;
+
+        this.setState({
+            loadFeedback: "loading",
+            filtered: false
+        }, function () {
+            return _this2.reload();
+        });
+    },
+    _handleShowFormClick: function _handleShowFormClick() {
+        this.setState({ showForm: true });
+    },
+    _handleCancelClick: function _handleCancelClick() {
+        this.setState({ showForm: false });
+    },
+    _handleFilterClick: function _handleFilterClick() {
+        var _this3 = this;
+
+        this.setState({
+            loadFeedback: "loading"
+        }, function () {
+            _this3.getCall("find")({
+                data: _this3._filterForm.getValues(),
+                done: function done(data) {
+                    _this3.setState({
+                        dtoOut: data,
+                        loadFeedback: "ready",
+                        filtered: true
+                    });
+                },
+                fail: function fail(response) {
+                    return console.error(response);
+                }
+            });
+        });
+    },
+    _handlePaginationClick: function _handlePaginationClick(index) {
+        var _this4 = this;
+
+        this.setState({
+            actual: index,
+            loadFeedback: "loading"
+        }, function () {
+            _this4.getCall("onLoad")({
+                data: { page: ++index },
+                done: function done(data) {
+                    _this4.setState({
+                        dtoOut: data,
+                        loadFeedback: "ready",
+                        filtered: true
+                    });
+                },
+                fail: function fail(response) {
+                    return console.error(response);
+                }
+            });
+        });
+    },
+    _handleLinkClick: function _handleLinkClick(link) {
+        this.getCcrComponentByKey(UU5.Environment.CCRKEY_ROUTER).setRoute(link.props.href);
+    },
+    _handleLoadedTractors: function _handleLoadedTractors(tractors) {
+        var _this5 = this;
+
+        if (!tractors || tractors.length === 0) {
+            return _react2.default.createElement(
+                UU5.Bricks.P,
+                null,
+                "Nen\xED tu \u017E\xE1dn\xFD traktor"
+            );
+        }
+
+        var lines = tractors.map(function (tractor) {
+            return _react2.default.createElement(
+                UU5.Bricks.Table.Tr,
+                { key: tractor.id },
+                _react2.default.createElement(
+                    UU5.Bricks.Table.Td,
+                    null,
+                    _react2.default.createElement(UU5.Bricks.Link, { content: tractor.vin, onClick: function onClick() {
+                            UU5.Environment.setRoute(_react2.default.createElement(_tractorDetail2.default, { vehicleID: tractor.id }));
+                        } })
+                ),
+                _react2.default.createElement(
+                    UU5.Bricks.Table.Td,
+                    null,
+                    tractor.type
+                ),
+                _react2.default.createElement(
+                    UU5.Bricks.Table.Td,
+                    null,
+                    tractor.dateOfAcquisition
+                ),
+                _react2.default.createElement(
+                    UU5.Bricks.Table.Td,
+                    null,
+                    tractor.vehicleState
+                ),
+                _react2.default.createElement(UU5.Bricks.Table.Td, null),
+                _react2.default.createElement(UU5.Bricks.Table.Td, null)
+            );
+        });
+
+        return _react2.default.createElement(
+            UU5.Bricks.Div,
+            null,
+            _react2.default.createElement(
+                UU5.Bricks.Table,
+                { striped: true },
+                _react2.default.createElement(
+                    UU5.Bricks.Table.THead,
+                    null,
+                    _react2.default.createElement(
+                        UU5.Bricks.Table.Tr,
+                        null,
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Th,
+                            null,
+                            "VIN"
+                        ),
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Th,
+                            null,
+                            "Typ"
+                        ),
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Th,
+                            null,
+                            "St\xE1\u0159\xED"
+                        ),
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Th,
+                            null,
+                            "Stav"
+                        ),
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Th,
+                            null,
+                            "Klient"
+                        ),
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Th,
+                            null,
+                            "Akce"
+                        )
+                    )
+                ),
+                _react2.default.createElement(
+                    UU5.Bricks.Table.TBody,
+                    null,
+                    lines
+                )
+            ),
+            _react2.default.createElement(UU5.Bricks.Pagination, {
+                ref_: function ref_(r) {
+                    return _this5._pagination = r;
+                },
+                colorSchema: "success",
+                items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                firstGlyphicon: "glyphicon-backward",
+                lastGlyphicon: "glyphicon-forward",
+                onChanged: function onChanged(comp, index) {
+                    return _this5._handlePaginationClick(index);
+                }
+            })
+        );
+    },
+
+    //@@viewOff:componentSpecificHelpers
+
+    //@@viewOn:render
+    render: function render() {
+        return _react2.default.createElement(
+            UU5.Bricks.Div,
+            null,
+            _react2.default.createElement(
+                UU5.Bricks.Header,
+                { level: 2 },
+                "Seznam traktor\u016F (vozidel)"
+            ),
+            this._getNewForm(),
+            _react2.default.createElement(
+                UU5.Bricks.Panel,
+                { header: this._getPanelHeader(), alwaysExpanded: true, disableHeaderClick: true },
+                this._getFilterForm(),
+                this.getLoadFeedbackChildren(this._handleLoadedTractors)
+            )
+        );
     }
+    //@@viewOff:render
 
-    var lines = tractors.map(function (tractor) {
-      return _react2.default.createElement(
-        UU5.Bricks.Table.Tr,
-        { key: tractor.id },
-        _react2.default.createElement(
-          UU5.Bricks.Table.Td,
-          null,
-          tractor.id
-        ),
-        _react2.default.createElement(
-          UU5.Bricks.Table.Td,
-          null,
-          tractor.type
-        ),
-        _react2.default.createElement(
-          UU5.Bricks.Table.Td,
-          null,
-          tractor.vin
-        ),
-        _react2.default.createElement(
-          UU5.Bricks.Table.Td,
-          null,
-          tractor.carState
-        )
-      );
-    });
+});
 
-    return _react2.default.createElement(
-      UU5.Bricks.Table,
-      { striped: true },
-      _react2.default.createElement(
-        UU5.Bricks.Table.THead,
-        null,
-        _react2.default.createElement(
-          UU5.Bricks.Table.Tr,
-          null,
-          _react2.default.createElement(
-            UU5.Bricks.Table.Th,
-            null,
-            "id"
-          ),
-          _react2.default.createElement(
-            UU5.Bricks.Table.Th,
-            null,
-            "type"
-          ),
-          _react2.default.createElement(
-            UU5.Bricks.Table.Th,
-            null,
-            "vin"
-          ),
-          _react2.default.createElement(
-            UU5.Bricks.Table.Th,
-            null,
-            "state"
-          )
-        )
-      ),
-      _react2.default.createElement(
-        UU5.Bricks.Table.TBody,
-        null,
-        lines
-      )
-    );
-  },
+/***/ }),
 
-  //@@viewOff:componentSpecificHelpers
+/***/ "./vuc/vehicle-stk-list.js":
+/* unknown exports provided */
+/* all exports used */
+/*!*********************************!*\
+  !*** ./vuc/vehicle-stk-list.js ***!
+  \*********************************/
+/***/ (function(module, exports, __webpack_require__) {
 
-  //@@viewOn:render
-  render: function render() {
-    return _react2.default.createElement(
-      UU5.Bricks.Div,
-      null,
-      _react2.default.createElement(
-        UU5.Bricks.Header,
-        { level: 2 },
-        "Seznam traktor\u016F (vozidel)"
-      ),
-      this._getNewForm(),
-      _react2.default.createElement(
-        UU5.Bricks.Panel,
-        { header: this._getPanelHeader(), alwaysExpanded: true, disableHeaderClick: true },
-        this._getFilterForm(),
-        this.getLoadFeedbackChildren(this._handleLoadedTractors)
-      )
-    );
-  }
-  //@@viewOff:render
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _react = __webpack_require__(/*! react */ 0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _uu5g = __webpack_require__(/*! uu5g04 */ 1);
+
+var UU5 = _interopRequireWildcard(_uu5g);
+
+var _config = __webpack_require__(/*! ../core/_config.js */ "./core/_config.js");
+
+var _config2 = _interopRequireDefault(_config);
+
+var _tractorDetail = __webpack_require__(/*! ./tractor-detail */ "./vuc/tractor-detail.js");
+
+var _tractorDetail2 = _interopRequireDefault(_tractorDetail);
+
+var _calls = __webpack_require__(/*! calls */ "./calls.js");
+
+var _calls2 = _interopRequireDefault(_calls);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = _react2.default.createClass({
+    displayName: "vehicle-stk-list",
+
+
+    //@@viewOn:mixins
+    mixins: [UU5.Common.BaseMixin, UU5.Common.ElementaryMixin, UU5.Common.RouteMixin, UU5.Common.LoadMixin, UU5.Common.CcrReaderMixin],
+    //@@viewOff:mixins
+
+    //@@viewOn:statics
+    statics: {
+        tagName: _config2.default.APP + ".TractorList",
+        classNames: {
+            main: _config2.default.CSS + "-tractor-list"
+        },
+        calls: {
+            onLoad: "vehicleStk"
+        }
+    },
+    //@@viewOff:statics
+
+    //@@viewOn:standardComponentLifeCycle
+    getInitialState: function getInitialState() {
+        return {
+            showForm: false,
+            filtered: false
+        };
+    },
+    componentWillMount: function componentWillMount() {
+        this.setCalls(_calls2.default);
+    },
+
+    //@@viewOff:standardComponentLifeCycle
+
+    //@@viewOn:componentSpecificHelpers
+    _getNewForm: function _getNewForm() {
+        if (!this.state.showForm) {
+            return null;
+        }
+
+        return _react2.default.createElement(
+            UU5.Bricks.Panel,
+            { header: "P\u0159id\xE1n\xED nov\xE9ho vozidla", alwaysExpanded: true, disableHeaderClick: true },
+            _react2.default.createElement(
+                UU5.Forms.BasicForm,
+                { ref_: this._handleNewFormReference },
+                _react2.default.createElement(UU5.Forms.Text, { name: "type", value: "RECLAIMER", label: "Typ" }),
+                _react2.default.createElement(UU5.Forms.Text, { name: "vin", value: "AHTBB3QD001726541", label: "VIN" }),
+                _react2.default.createElement(UU5.Forms.Text, { name: "date", value: "1487812893", label: "Datum" }),
+                _react2.default.createElement(UU5.Forms.Text, { name: "price", value: "1100000", label: "Cena" })
+            ),
+            _react2.default.createElement(
+                UU5.Bricks.Button,
+                { colorSchema: "warning", onClick: this._handleCancelClick },
+                "Zav\u0159\xEDt"
+            ),
+            _react2.default.createElement(
+                UU5.Bricks.Button,
+                { colorSchema: "primary", onClick: this._handleCreateNewCar },
+                "Ulo\u017Eit"
+            )
+        );
+    },
+    _getFilterForm: function _getFilterForm() {
+        return _react2.default.createElement(
+            UU5.Forms.BasicForm,
+            { ref_: this._handleFilterFormReference },
+            _react2.default.createElement(
+                UU5.Bricks.Row,
+                null,
+                _react2.default.createElement(
+                    UU5.Bricks.Column,
+                    { colWidth: "lg-3" },
+                    _react2.default.createElement(UU5.Forms.Text, { name: "acquiredFrom", label: "Od", controlled: false, value: "2007-08-21" })
+                ),
+                _react2.default.createElement(
+                    UU5.Bricks.Column,
+                    { colWidth: "lg-3" },
+                    _react2.default.createElement(UU5.Forms.Text, { name: "acquiredTo", label: "Do", controlled: false, value: "2007-08-23" })
+                ),
+                _react2.default.createElement(
+                    UU5.Bricks.Column,
+                    { colWidth: "lg-6" },
+                    _react2.default.createElement(UU5.Bricks.Button, { content: "Filtruj", onClick: this._handleFilterClick }),
+                    _react2.default.createElement(UU5.Bricks.Button, {
+                        colorSchema: "warning",
+                        disabled: !this.state.filtered,
+                        content: "Zru\u0161 filtr",
+                        onClick: this._handleCancelFilter
+                    })
+                )
+            )
+        );
+    },
+    _getPanelHeader: function _getPanelHeader() {
+        var button = !this.state.showForm && _react2.default.createElement(
+            UU5.Bricks.Button,
+            { size: "xs", onClick: this._handleShowFormClick,
+                className: "pull-right" },
+            "P\u0159idat"
+        );
+
+        return _react2.default.createElement(
+            UU5.Bricks.Div,
+            null,
+            "Seznam vozidel ",
+            button
+        );
+    },
+    _handleNewFormReference: function _handleNewFormReference(form) {
+        this._addForm = form;
+    },
+    _handleFilterFormReference: function _handleFilterFormReference(form) {
+        this._filterForm = form;
+    },
+    _handleCreateNewCar: function _handleCreateNewCar() {
+        var _this = this;
+
+        var formData = this._addForm.getValues();
+
+        // hide form and show loading
+        this.setState({
+            loadFeedback: "loading",
+            showForm: false
+        }, function () {
+            _this.getCall("create")({
+                data: formData,
+                done: function done() {
+                    _this.reload();
+                },
+                fail: function fail(response) {
+                    return console.error(response);
+                }
+            });
+        });
+
+        // clear up reference
+        this._addForm = undefined;
+    },
+    _handleCancelFilter: function _handleCancelFilter() {
+        var _this2 = this;
+
+        this.setState({
+            loadFeedback: "loading",
+            filtered: false
+        }, function () {
+            return _this2.reload();
+        });
+    },
+    _handleShowFormClick: function _handleShowFormClick() {
+        this.setState({ showForm: true });
+    },
+    _handleCancelClick: function _handleCancelClick() {
+        this.setState({ showForm: false });
+    },
+    _handleFilterClick: function _handleFilterClick() {
+        var _this3 = this;
+
+        this.setState({
+            loadFeedback: "loading"
+        }, function () {
+            _this3.getCall("find")({
+                data: _this3._filterForm.getValues(),
+                done: function done(data) {
+                    _this3.setState({
+                        dtoOut: data,
+                        loadFeedback: "ready",
+                        filtered: true
+                    });
+                },
+                fail: function fail(response) {
+                    return console.error(response);
+                }
+            });
+        });
+    },
+    _handlePaginationClick: function _handlePaginationClick(index) {
+        var _this4 = this;
+
+        this.setState({
+            actual: index,
+            loadFeedback: "loading"
+        }, function () {
+            _this4.getCall("onLoad")({
+                data: { page: ++index },
+                done: function done(data) {
+                    _this4.setState({
+                        dtoOut: data,
+                        loadFeedback: "ready",
+                        filtered: true
+                    });
+                },
+                fail: function fail(response) {
+                    return console.error(response);
+                }
+            });
+        });
+    },
+    _handleLinkClick: function _handleLinkClick(link) {
+        this.getCcrComponentByKey(UU5.Environment.CCRKEY_ROUTER).setRoute(link.props.href);
+    },
+    _handleLoadedTractors: function _handleLoadedTractors(tractors) {
+        var _this5 = this;
+
+        if (!tractors || tractors.length === 0) {
+            return _react2.default.createElement(
+                UU5.Bricks.P,
+                null,
+                "Nen\xED tu \u017E\xE1dn\xFD traktor"
+            );
+        }
+
+        var lines = tractors.map(function (tractor) {
+            return _react2.default.createElement(
+                UU5.Bricks.Table.Tr,
+                { key: tractor.id },
+                _react2.default.createElement(
+                    UU5.Bricks.Table.Td,
+                    null,
+                    _react2.default.createElement(UU5.Bricks.Link, { content: tractor.vin, onClick: function onClick() {
+                            UU5.Environment.setRoute(_react2.default.createElement(_tractorDetail2.default, { vehicleID: tractor.id }));
+                        } })
+                ),
+                _react2.default.createElement(
+                    UU5.Bricks.Table.Td,
+                    null,
+                    tractor.type
+                ),
+                _react2.default.createElement(
+                    UU5.Bricks.Table.Td,
+                    null,
+                    tractor.lastTechnicalCheck.checkDate
+                ),
+                _react2.default.createElement(UU5.Bricks.Table.Td, null)
+            );
+        });
+
+        return _react2.default.createElement(
+            UU5.Bricks.Div,
+            null,
+            _react2.default.createElement(
+                UU5.Bricks.Table,
+                { striped: true },
+                _react2.default.createElement(
+                    UU5.Bricks.Table.THead,
+                    null,
+                    _react2.default.createElement(
+                        UU5.Bricks.Table.Tr,
+                        null,
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Th,
+                            null,
+                            "VIN"
+                        ),
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Th,
+                            null,
+                            "Typ"
+                        ),
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Th,
+                            null,
+                            "Datum konce STK"
+                        ),
+                        _react2.default.createElement(
+                            UU5.Bricks.Table.Th,
+                            null,
+                            "Klient"
+                        )
+                    )
+                ),
+                _react2.default.createElement(
+                    UU5.Bricks.Table.TBody,
+                    null,
+                    lines
+                )
+            ),
+            _react2.default.createElement(UU5.Bricks.Pagination, {
+                ref_: function ref_(r) {
+                    return _this5._pagination = r;
+                },
+                colorSchema: "success",
+                items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                firstGlyphicon: "glyphicon-backward",
+                lastGlyphicon: "glyphicon-forward",
+                onChanged: function onChanged(comp, index) {
+                    return _this5._handlePaginationClick(index);
+                }
+            })
+        );
+    },
+
+    //@@viewOff:componentSpecificHelpers
+
+    //@@viewOn:render
+    render: function render() {
+        return _react2.default.createElement(
+            UU5.Bricks.Div,
+            null,
+            _react2.default.createElement(
+                UU5.Bricks.Header,
+                { level: 2 },
+                "Seznam vozidel (STK)"
+            ),
+            this._getNewForm(),
+            _react2.default.createElement(
+                UU5.Bricks.Panel,
+                { header: this._getPanelHeader(), alwaysExpanded: true, disableHeaderClick: true },
+                this._getFilterForm(),
+                this.getLoadFeedbackChildren(this._handleLoadedTractors)
+            )
+        );
+    }
+    //@@viewOff:render
 
 });
 

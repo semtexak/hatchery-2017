@@ -35,7 +35,7 @@
     }
   },
   "isProductionBuild": false,
-  "useMockData": true,
+  "useMockData": false,
   "host": "0.0.0.0",
   "port": 1234,
   "https": false,
@@ -51,7 +51,7 @@
   "appBaseUrlPath": "<preserve-2-path-segments>",
   "appAssetsRelativeUrlPath": "public/0.1.0/",
   "aliases": {
-    "calls": "C:\\Users\\User\\Desktop\\Seminar\\htch_work\\uu5\\test\\mocks.js",
+    "calls": "C:\\Users\\User\\Desktop\\Seminar\\htch_work\\uu5\\src\\calls.js",
     "ns": "C:\\Users\\User\\Desktop\\Seminar\\htch_work\\uu5\\.tmp\\temp-0.js",
     "cssns": "C:\\Users\\User\\Desktop\\Seminar\\htch_work\\uu5\\.tmp\\cssns.less"
   }
