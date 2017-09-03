@@ -1,10 +1,8 @@
 import React from "react";
 import * as UU5 from "uu5g04";
 import Cfg from "../core/_config.js";
-import StkPanel from "./stk-panel.js";
-import LendingPanel from "./lending-panel.js";
-import RepairPanel from "./repair-panel.js";
-import VehicleDetailPanel from "./vehicle-detail-panel.js";
+import LendingPanel from "./client-lending-panel.js";
+import ClientPanel from "./client-detail-panel.js";
 
 import Calls from "calls"
 
@@ -32,7 +30,8 @@ export default React.createClass({
     getInitialState() {
         return {
             showForm: false,
-            vehicleID: 0
+            vehicleID: 0,
+            clientID: 0
         }
     },
     //@@viewOff:standardComponentLifeCycle
@@ -81,7 +80,8 @@ export default React.createClass({
 
     getOnLoadData_() {
         return {
-            vehicleID: this.props.vehicleID
+            vehicleID: this.props.vehicleID,
+            clientID: this.props.clientID,
         }
     },
 
@@ -117,10 +117,8 @@ export default React.createClass({
             <UU5.Bricks.Div>
                 {this._getNewForm()}
                 <UU5.Bricks.Div>
-                    <VehicleDetailPanel vehicleID={this.props.vehicleID} />
-                    <LendingPanel vehicleID={this.props.vehicleID} />
-                    <StkPanel vehicleID={this.props.vehicleID} />
-                    <RepairPanel vehicleID={this.props.vehicleID} />
+                    <ClientPanel clientID={this.props.clientID} />
+                    <LendingPanel clientID={this.props.clientID} />
                 </UU5.Bricks.Div>
                 {/*{this.getLoadFeedbackChildren(this._handleLoadedVehicle)}*/}
             </UU5.Bricks.Div>

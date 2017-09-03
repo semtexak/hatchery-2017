@@ -1,5 +1,6 @@
 package cz.unicorn.tga.tractor.service;
 
+import cz.unicorn.tga.tractor.controller.ControllerConstants;
 import cz.unicorn.tga.tractor.dao.ClientDAO;
 import cz.unicorn.tga.tractor.dao.LendingDAO;
 import cz.unicorn.tga.tractor.dao.VehicleDAO;
@@ -8,12 +9,19 @@ import cz.unicorn.tga.tractor.entity.Lending;
 import cz.unicorn.tga.tractor.entity.Vehicle;
 import cz.unicorn.tga.tractor.model.LendingDetailDTO;
 import cz.unicorn.tga.tractor.model.LendingListDTO;
+import cz.unicorn.tga.tractor.model.VehicleListDTO;
+import cz.unicorn.tga.tractor.model.form.AvailabilityCheckForm;
 import cz.unicorn.tga.tractor.model.form.LendingNewForm;
 import cz.unicorn.tga.tractor.util.DTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional
@@ -49,9 +57,23 @@ public class LendingManagerServiceBean implements LendingManagerService {
 
     @Override
     public Page<LendingListDTO> findAllLendingsForVehicle(Long id, Pageable pageable) {
-        PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), Sort.Direction.DESC, "lendFrom");
+        PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), ControllerConstants.SUB_ITEMS_PER_PAGE, Sort.Direction.DESC, "lendFrom");
         Page<Lending> lendingPage = lendingDAO.findByVehicle(id, pageRequest);
-        return new PageImpl<LendingListDTO>(dtoMapper.toLendingList(lendingPage.getContent()), pageable, lendingPage.getTotalElements());
+        return new PageImpl<LendingListDTO>(dtoMapper.toLendingList(lendingPage.getContent()), pageRequest, lendingPage.getTotalElements());
+    }
+
+    @Override
+    public Page<LendingListDTO> findLatestLendingsForVehicle(Long id, Pageable pageable) {
+        Date minusYear = Date.from(LocalDate.now().minusMonths(18).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), ControllerConstants.SUB_ITEMS_PER_PAGE, Sort.Direction.DESC, "lendFrom");
+        Page<Lending> lendingPage = lendingDAO.findLatestByVehicle(id, minusYear, pageRequest);
+        return new PageImpl<LendingListDTO>(dtoMapper.toLendingList(lendingPage.getContent()), pageRequest, lendingPage.getTotalElements());
+    }
+
+    @Override
+    public List<VehicleListDTO> findAvailableCarsForLending(AvailabilityCheckForm availabilityCheckForm) {
+        List<Vehicle> vehicles = lendingDAO.findAvailableVehicles(availabilityCheckForm.getLendFrom(), availabilityCheckForm.getLendTo());
+        return dtoMapper.toVehicleList(vehicles);
     }
 
     private void save(Lending lending) {

@@ -1,17 +1,14 @@
 package cz.unicorn.tga.tractor.facade;
 
 import cz.unicorn.tga.tractor.model.*;
-import cz.unicorn.tga.tractor.model.form.LendingNewForm;
-import cz.unicorn.tga.tractor.model.form.StkNewForm;
-import cz.unicorn.tga.tractor.model.form.VehicleChangeStateForm;
-import cz.unicorn.tga.tractor.model.form.VehicleNewForm;
-import cz.unicorn.tga.tractor.service.LendingManagerService;
-import cz.unicorn.tga.tractor.service.StkManagerService;
-import cz.unicorn.tga.tractor.service.VehicleManagerService;
+import cz.unicorn.tga.tractor.model.form.*;
+import cz.unicorn.tga.tractor.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class VehicleFacade {
@@ -25,7 +22,13 @@ public class VehicleFacade {
     @Autowired
     private LendingManagerService lendingService;
 
-    public Page<VehicleStkListDTO> getVehiclesWhereStkIsNeeded(Pageable pageable) {
+    @Autowired
+    private RepairManagerService repairService;
+
+    @Autowired
+    private ClientManagerService clientService;
+
+    public Page<VehicleListDTO> getVehiclesWhereStkIsNeeded(Pageable pageable) {
         return stkService.getVehicles(pageable);
     }
 
@@ -63,5 +66,29 @@ public class VehicleFacade {
 
     public Page<LendingListDTO> getAllLendingsForVehicle(Long id, Pageable pageable) {
         return lendingService.findAllLendingsForVehicle(id, pageable);
+    }
+
+    public Page<VehicleRepairDTO> getAllRepairsForVehicle(Long id, Pageable pageable) {
+        return repairService.findAllRepairsForVehicle(id, pageable);
+    }
+
+    public Page<StkListDTO> getAllStksForVehicle(Long id, Pageable pageable) {
+        return stkService.findAllStksForVehicle(id, pageable);
+    }
+
+    public ClientBaseDTO getClient(Long id) {
+        return clientService.getClient(id);
+    }
+
+    public Page<LendingListDTO> getLatestLendingsForVehicle(Long id, Pageable pageable) {
+        return lendingService.findLatestLendingsForVehicle(id, pageable);
+    }
+
+    public Page<LendingListDTO> getLatestLendingsForClient(Long id, Pageable pageable) {
+        return lendingService.findLatestLendingsForVehicle(id, pageable);
+    }
+
+    public List<VehicleListDTO> getAvailableCarsForLending(AvailabilityCheckForm availabilityCheckForm) {
+        return lendingService.findAvailableCarsForLending(availabilityCheckForm);
     }
 }

@@ -27,4 +27,10 @@ public interface DTOMapper {
     LendingDetailDTO toLendingDetailDTO(final Lending lending);
 
     List<LendingListDTO> toLendingList(List<Lending> content);
+
+    List<VehicleRepairDTO> toVehicleRepairList(List<VehicleRepair> content);
+
+    List<ClientBaseDTO> toClientBase(List<Client> content);
+
+    List<StkListDTO> toStkList(List<VehicleMot> content);
 }

@@ -5,9 +5,12 @@ package cz.unicorn.tga.tractor.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import cz.unicorn.tga.tractor.facade.VehicleFacade;
 import cz.unicorn.tga.tractor.model.*;
+import cz.unicorn.tga.tractor.model.enumeration.VehicleType;
+import cz.unicorn.tga.tractor.model.form.AvailabilityCheckForm;
 import cz.unicorn.tga.tractor.model.form.StkNewForm;
 import cz.unicorn.tga.tractor.model.form.VehicleNewForm;
 import cz.unicorn.tga.tractor.service.StkManagerService;
@@ -39,9 +42,6 @@ public class VehicleController {
     private VehicleManagerService vehicleService;
 
     @Autowired
-    private StkManagerService stkService;
-
-    @Autowired
     private VehicleFacade vehicleFacade;
 
 
@@ -57,7 +57,22 @@ public class VehicleController {
 
     @RequestMapping(value = "/{id}/lendings", method = RequestMethod.GET)
     public Page<LendingListDTO> getAllLendings(@PathVariable Long id, Pageable pageable) {
-        return vehicleFacade.getAllLendingsForVehicle(id, pageable);
+        return vehicleFacade.getLatestLendingsForVehicle(id, pageable);
+    }
+
+    @RequestMapping(value = "/availability", method = RequestMethod.POST)
+    public List<VehicleListDTO> getAvailableCarsForLending(@RequestBody final AvailabilityCheckForm availabilityCheckForm, Pageable pageable) {
+        return vehicleFacade.getAvailableCarsForLending(availabilityCheckForm);
+    }
+
+    @RequestMapping(value = "/{id}/stks", method = RequestMethod.GET)
+    public Page<StkListDTO> getAllStks(@PathVariable Long id, Pageable pageable) {
+        return vehicleFacade.getAllStksForVehicle(id, pageable);
+    }
+
+    @RequestMapping(value = "/{id}/repairs", method = RequestMethod.GET)
+    public Page<VehicleRepairDTO> getAllRepairs(@PathVariable Long id, Pageable pageable) {
+        return vehicleFacade.getAllRepairsForVehicle(id, pageable);
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
@@ -81,7 +96,7 @@ public class VehicleController {
 
 
     @RequestMapping(value = "/stk", method = RequestMethod.GET)
-    public Page<VehicleStkListDTO> getAllVehiclesForStk(Pageable pageable) {
+    public Page<VehicleListDTO> getAllVehiclesForStk(Pageable pageable) {
         return vehicleFacade.getVehiclesWhereStkIsNeeded(pageable);
     }
 

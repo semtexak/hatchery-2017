@@ -9,6 +9,7 @@ import cz.unicorn.tga.tractor.model.ClientBaseDTO;
 import cz.unicorn.tga.tractor.model.LendingBaseDTO;
 import cz.unicorn.tga.tractor.model.LendingDetailDTO;
 import cz.unicorn.tga.tractor.model.LendingListDTO;
+import cz.unicorn.tga.tractor.model.StkListDTO;
 import cz.unicorn.tga.tractor.model.VehicleBaseDTO;
 import cz.unicorn.tga.tractor.model.VehicleDetailDTO;
 import cz.unicorn.tga.tractor.model.VehicleListDTO;
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2017-09-02T20:49:10+0200",
+    date = "2017-09-03T16:23:12+0200",
     comments = "version: 1.2.0.Beta3, compiler: javac, environment: Java 1.8.0_144 (Oracle Corporation)"
 )
 @Component
@@ -164,6 +165,48 @@ public class DTOMapperImpl implements DTOMapper {
         return list;
     }
 
+    @Override
+    public List<VehicleRepairDTO> toVehicleRepairList(List<VehicleRepair> content) {
+        if ( content == null ) {
+            return null;
+        }
+
+        List<VehicleRepairDTO> list = new ArrayList<VehicleRepairDTO>( content.size() );
+        for ( VehicleRepair vehicleRepair : content ) {
+            list.add( toVehicleRepair( vehicleRepair ) );
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<ClientBaseDTO> toClientBase(List<Client> content) {
+        if ( content == null ) {
+            return null;
+        }
+
+        List<ClientBaseDTO> list = new ArrayList<ClientBaseDTO>( content.size() );
+        for ( Client client : content ) {
+            list.add( toClientBaseDTO( client ) );
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<StkListDTO> toStkList(List<VehicleMot> content) {
+        if ( content == null ) {
+            return null;
+        }
+
+        List<StkListDTO> list = new ArrayList<StkListDTO>( content.size() );
+        for ( VehicleMot vehicleMot : content ) {
+            list.add( vehicleMotToStkListDTO( vehicleMot ) );
+        }
+
+        return list;
+    }
+
     protected LendingBaseDTO lendingToLendingBaseDTO(Lending lending) {
         if ( lending == null ) {
             return null;
@@ -286,5 +329,20 @@ public class DTOMapperImpl implements DTOMapper {
         lendingListDTO.setClient( toClientBaseDTO( lending.getClient() ) );
 
         return lendingListDTO;
+    }
+
+    protected StkListDTO vehicleMotToStkListDTO(VehicleMot vehicleMot) {
+        if ( vehicleMot == null ) {
+            return null;
+        }
+
+        StkListDTO stkListDTO = new StkListDTO();
+
+        stkListDTO.setId( vehicleMot.getId() );
+        stkListDTO.setCheckDate( vehicleMot.getCheckDate() );
+        stkListDTO.setComment( vehicleMot.getComment() );
+        stkListDTO.setPassed( vehicleMot.getPassed() );
+
+        return stkListDTO;
     }
 }

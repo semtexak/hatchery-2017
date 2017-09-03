@@ -17,6 +17,7 @@ public interface StkManagerService {
 
     Page<VehicleStkListDTO> findByFilter(StkFilter filter, Pageable pageable);
 
-    Page<VehicleStkListDTO> getVehicles(Pageable pageable);
+    Page<VehicleListDTO> getVehicles(Pageable pageable);
 
+    Page<StkListDTO> findAllStksForVehicle(Long id, Pageable pageable);
 }

@@ -68,7 +68,43 @@ let Calls = {
     },
 
     loadLendingsForVehicle: function (dtoIn) {
-        let commandUri = Calls.getCommandUri("vehicles/" + dtoIn.data.vehicleID +"/lendings");
+        let commandUri = Calls.getCommandUri("vehicles/" + dtoIn.data.vehicleID +"/lendings?page=" +dtoIn.data.page);
+        dtoIn.data = undefined;
+        Calls.call(GET, commandUri, dtoIn);
+    },
+
+    loadLendingsForClient: function (dtoIn) {
+        let commandUri = Calls.getCommandUri("clients/" + dtoIn.data.clientID +"/lendings?page=" +dtoIn.data.page);
+        dtoIn.data = undefined;
+        Calls.call(GET, commandUri, dtoIn);
+    },
+
+    loadStksForVehicle: function (dtoIn) {
+        let commandUri = Calls.getCommandUri("vehicles/" + dtoIn.data.vehicleID +"/stks");
+        dtoIn.data = undefined;
+        Calls.call(GET, commandUri, dtoIn);
+    },
+
+    loadRepairsForVehicle: function (dtoIn) {
+        let commandUri = Calls.getCommandUri("vehicles/" + dtoIn.data.vehicleID +"/repairs");
+        dtoIn.data = undefined;
+        Calls.call(GET, commandUri, dtoIn);
+    },
+
+    // Lending detail
+    findClient: function (dtoIn) {
+        let commandUri = Calls.getCommandUri("clients/" + dtoIn.data.clientID);
+        dtoIn.data = undefined;
+        Calls.call(GET, commandUri, dtoIn);
+    },
+
+    addLending: function (dtoIn) {
+        let commandUri = Calls.getCommandUri("lendings/create");
+        Calls.call(POST, commandUri, dtoIn);
+    },
+
+    findAvailableVehicles: function (dtoIn) {
+        let commandUri = Calls.getCommandUri("vehicles/availability");
         dtoIn.data = undefined;
         Calls.call(GET, commandUri, dtoIn);
     },

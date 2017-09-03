@@ -2,6 +2,7 @@ import React from "react";
 import * as UU5 from "uu5g04";
 import Cfg from "../core/_config.js";
 import VehicleDetail from "./vehicle-detail";
+import ClientDetail from "./client-detail";
 
 import Calls from "calls"
 
@@ -156,7 +157,7 @@ export default React.createClass({
                                         <UU5.Bricks.Table.Td><strong>Klient:</strong></UU5.Bricks.Table.Td>
                                         <UU5.Bricks.Table.Td>
                                             <UU5.Bricks.Link content={this._formatClientName(lending)} onClick={() => {
-                                                UU5.Environment.setRoute(<LendingDetail lendingID={vehicle.currentLending.id} />);
+                                                UU5.Environment.setRoute(<ClientDetail clientID={lending.client.id} />);
                                             }} />
                                         </UU5.Bricks.Table.Td>
                                     </UU5.Bricks.Table.Tr>

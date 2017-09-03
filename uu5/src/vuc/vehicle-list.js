@@ -205,7 +205,7 @@ export default React.createClass({
     },
 
     _formatClientName(lending) {
-        return lending ? (lending.client.name + " " + (!lending.client.surname ? "" : lending.client.surname)) : "--";
+        return lending ? (lending.client.name + " " + (!lending.client.surname ? "" : lending.client.surname)) : " ";
     },
 
     _handleLoadedTractors(tractors) {

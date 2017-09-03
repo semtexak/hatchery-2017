@@ -7,16 +7,17 @@ import cz.unicorn.tga.tractor.dao.StkDAO;
 import cz.unicorn.tga.tractor.dao.VehicleDAO;
 import cz.unicorn.tga.tractor.entity.Vehicle;
 import cz.unicorn.tga.tractor.entity.VehicleMot;
+import cz.unicorn.tga.tractor.entity.VehicleRepair;
 import cz.unicorn.tga.tractor.model.*;
 import cz.unicorn.tga.tractor.model.enumeration.VehicleState;
 import cz.unicorn.tga.tractor.model.form.StkNewForm;
 import cz.unicorn.tga.tractor.util.DTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 /**
  * @author DZCJS9F
@@ -89,10 +90,16 @@ public class StkManagerServiceBean implements StkManagerService {
     }
 
     @Override
-    public Page<VehicleStkListDTO> getVehicles(Pageable pageable) {
-//        Page<Vehicle> vehiclePage = vehicleDAO.findStkReady(pageable);
-//        return new PageImpl<VehicleStkListDTO>(dtoMapper.toVehicleStkList(vehiclePage.getContent()), pageable, vehiclePage.getTotalElements());
-        return null;
+    public Page<VehicleListDTO> getVehicles(Pageable pageable) {
+        Page<Vehicle> stkPage = stkDAO.findStkReady(pageable);
+        return new PageImpl<VehicleListDTO>(dtoMapper.toVehicleList(stkPage.getContent()), pageable, stkPage.getTotalElements());
+    }
+
+    @Override
+    public Page<StkListDTO> findAllStksForVehicle(Long id, Pageable pageable) {
+        PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), Sort.Direction.DESC, "checkDate");
+        Page<VehicleMot> stkPage = stkDAO.findByVehicle(id, pageRequest);
+        return new PageImpl<StkListDTO>(dtoMapper.toStkList(stkPage.getContent()), pageRequest, stkPage.getTotalElements());
     }
 
 }

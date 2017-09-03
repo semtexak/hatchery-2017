@@ -29,7 +29,8 @@ public class ControllerConstants {
 
 	public static final String VIEW_NAME_ERROR = "error";
 	// TABLE
-	public static final Integer ITEMS_PER_PAGE = 10;
+	public static final Integer ITEMS_PER_PAGE = 20;
+	public static final Integer SUB_ITEMS_PER_PAGE = 10;
 
 	public static final String URI_ERROR = "/error";
 	public static final String URI_ERROR_401 = URI_ERROR + CommonConstants.SLASH + "401";
