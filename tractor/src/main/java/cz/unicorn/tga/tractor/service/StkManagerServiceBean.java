@@ -4,10 +4,10 @@
 package cz.unicorn.tga.tractor.service;
 
 import cz.unicorn.tga.tractor.dao.StkDAO;
+import cz.unicorn.tga.tractor.dao.StkFilterDAO;
 import cz.unicorn.tga.tractor.dao.VehicleDAO;
 import cz.unicorn.tga.tractor.entity.Vehicle;
 import cz.unicorn.tga.tractor.entity.VehicleMot;
-import cz.unicorn.tga.tractor.entity.VehicleRepair;
 import cz.unicorn.tga.tractor.model.*;
 import cz.unicorn.tga.tractor.model.enumeration.VehicleState;
 import cz.unicorn.tga.tractor.model.form.StkNewForm;
@@ -17,8 +17,6 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-
 /**
  * @author DZCJS9F
  */
@@ -27,12 +25,14 @@ import java.util.Date;
 public class StkManagerServiceBean implements StkManagerService {
 
     private final StkDAO stkDAO;
+    private final StkFilterDAO stkFilterDAO;
     private final VehicleDAO vehicleDAO;
     private final DTOMapper dtoMapper;
 
     @Autowired
-    public StkManagerServiceBean(StkDAO stkDAO, VehicleDAO vehicleDAO, DTOMapper dtoMapper) {
+    public StkManagerServiceBean(StkDAO stkDAO, StkFilterDAO stkFilterDAO, VehicleDAO vehicleDAO, DTOMapper dtoMapper) {
         this.stkDAO = stkDAO;
+        this.stkFilterDAO = stkFilterDAO;
         this.vehicleDAO = vehicleDAO;
         this.dtoMapper = dtoMapper;
     }
@@ -83,16 +83,16 @@ public class StkManagerServiceBean implements StkManagerService {
      * {@inheritDoc}
      */
     @Override
-    public Page<VehicleStkListDTO> findByFilter(final StkFilter filter, Pageable pageable) {
-//        Page<Vehicle> vehiclePage = vehicleFilterDAO.findByFilter(filter, pageable);
-//        return new PageImpl<VehicleStkListDTO>(dtoMapper.toVehicleStkList(vehiclePage.getContent()), pageable, vehiclePage.getTotalElements());
-        return null;
+    public Page<VehicleStkDTO> findByFilter(final StkFilter filter, Pageable pageable) {
+        Page<VehicleStkDTO> vehiclePage = stkDAO.findStkReadyForDates(filter.getCheckDateFrom(), filter.getCheckDateTo(), pageable);
+        return new PageImpl<VehicleStkDTO>(vehiclePage.getContent(), pageable, vehiclePage.getTotalElements());
+//        return null;
     }
 
     @Override
-    public Page<VehicleListDTO> getVehicles(Pageable pageable) {
-        Page<Vehicle> stkPage = stkDAO.findStkReady(pageable);
-        return new PageImpl<VehicleListDTO>(dtoMapper.toVehicleList(stkPage.getContent()), pageable, stkPage.getTotalElements());
+    public Page<VehicleStkDTO> getVehicles(Pageable pageable) {
+        Page<VehicleStkDTO> stkPage = stkDAO.findStkReady(pageable);
+        return new PageImpl<VehicleStkDTO>(stkPage.getContent(), pageable, stkPage.getTotalElements());
     }
 
     @Override

@@ -28,7 +28,7 @@ public class VehicleFacade {
     @Autowired
     private ClientManagerService clientService;
 
-    public Page<VehicleListDTO> getVehiclesWhereStkIsNeeded(Pageable pageable) {
+    public Page<VehicleStkDTO> getVehiclesWhereStkIsNeeded(Pageable pageable) {
         return stkService.getVehicles(pageable);
     }
 
@@ -36,7 +36,7 @@ public class VehicleFacade {
         return vehicleService.getVehicles(pageable);
     }
 
-    public Page<VehicleStkListDTO> findByFilter(StkFilter stkFilter, Pageable pageable) {
+    public Page<VehicleStkDTO> findByFilter(StkFilter stkFilter, Pageable pageable) {
         return stkService.findByFilter(stkFilter, pageable);
     }
 
@@ -85,10 +85,14 @@ public class VehicleFacade {
     }
 
     public Page<LendingListDTO> getLatestLendingsForClient(Long id, Pageable pageable) {
-        return lendingService.findLatestLendingsForVehicle(id, pageable);
+        return lendingService.findLatestLendingsForClient(id, pageable);
     }
 
     public List<VehicleListDTO> getAvailableCarsForLending(AvailabilityCheckForm availabilityCheckForm) {
         return lendingService.findAvailableCarsForLending(availabilityCheckForm);
+    }
+
+    public void createNewRepair(RepairNewForm repairNewForm) {
+        repairService.createNewRepair(repairNewForm);
     }
 }

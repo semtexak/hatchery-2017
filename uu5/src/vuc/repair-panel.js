@@ -22,6 +22,7 @@ export default React.createClass({
         },
         calls: {
             onLoad: "loadRepairsForVehicle",
+            create: "addRepair"
         }
     },
     //@@viewOff:statics
@@ -49,6 +50,69 @@ export default React.createClass({
         this.getCcrComponentByKey(UU5.Environment.CCRKEY_ROUTER).setRoute(link.props.href)
     },
 
+    _handleShowFormClick() {
+        this.setState({showForm: true})
+    },
+
+    _handleCancelClick() {
+        this.setState({showForm: false})
+    },
+
+    _handleNewFormReference(form) {
+        this._addForm = form;
+    },
+
+    _getNewForm() {
+        if (!this.state.showForm) {
+            return null;
+        }
+
+        return (
+            <UU5.Bricks.Panel header="Přidání nového vozidla" alwaysExpanded={true} disableHeaderClick={true}>
+                <UU5.Forms.BasicForm ref_={this._handleNewFormReference}>
+                    <UU5.Forms.Datepicker name="repairedAt" placeholder="Vyplňte datum uskutečnení oprav" controlled={true} label="Datum opravy" required />
+                    <UU5.Forms.Text name="price" placeholder="Cena" label="Cena" required />
+                    <UU5.Forms.Text name="repairResolution" placeholder="Opravy" label="Opravy" />
+                </UU5.Forms.BasicForm>
+
+                <UU5.Bricks.Button colorSchema="warning" onClick={this._handleCancelClick}>Zavřít</UU5.Bricks.Button>
+                <UU5.Bricks.Button colorSchema="primary" onClick={this._handleCreateNewRepair}>Uložit</UU5.Bricks.Button>
+            </UU5.Bricks.Panel>
+        )
+    },
+
+    _handleCreateNewRepair() {
+        if(this._addForm.isValid()) {
+            let formData = this._addForm.getValues();
+            formData.vehicleId = this.props.vehicleID;
+            // hide form and show loading
+            this.setState({
+                loadFeedback: "loading",
+                showForm: false
+            }, () => {
+                this.getCall("create")({
+                    data: formData,
+                    done: () => {
+                        this.reload()
+                    },
+                    fail: (response) => console.error(response)
+                })
+            });
+
+            // clear up reference
+            this._addForm = undefined
+        }
+    },
+
+    _getPanelHeader() {
+        let button = !this.state.showForm && (
+            <UU5.Bricks.Button size="xs" onClick={this._handleShowFormClick}
+                               className="pull-right">Přidat opravu</UU5.Bricks.Button>
+        );
+
+        return <UU5.Bricks.Div>Seznam oprav {button}</UU5.Bricks.Div>
+    },
+
     _handleLoadedData(data) {
         let repairs = data.content.map((repair) => (
             <UU5.Bricks.Table.Tr key={repair.id}>
@@ -58,9 +122,8 @@ export default React.createClass({
             </UU5.Bricks.Table.Tr>
         ));
         return (
-            <UU5.Bricks.Accordion glyphiconExpanded="uu-glyphicon-arrow-up"
-                                  glyphiconCollapsed="uu-glyphicon-arrow-down">
-                <UU5.Bricks.Panel header="Seznam oprav">
+            <UU5.Bricks.Accordion>
+                <UU5.Bricks.Panel header={this._getPanelHeader()} alwaysExpanded={true} disableHeaderClick={true}>
                     <UU5.Bricks.Column colWidth='xs-12 sm-12 md-12 lg-12'>
                             <UU5.Bricks.Table striped>
                                 <UU5.Bricks.Table.THead>
@@ -85,6 +148,7 @@ export default React.createClass({
     render() {
         return (
             <UU5.Bricks.Div {...this.getMainPropsToPass()}>
+                {this._getNewForm()}
                 {this.getLoadFeedbackChildren(this._handleLoadedData)}
             </UU5.Bricks.Div>
         )

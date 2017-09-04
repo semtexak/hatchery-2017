@@ -9,12 +9,7 @@ import java.util.List;
 
 import cz.unicorn.tga.tractor.facade.VehicleFacade;
 import cz.unicorn.tga.tractor.model.*;
-import cz.unicorn.tga.tractor.model.enumeration.VehicleType;
-import cz.unicorn.tga.tractor.model.form.AvailabilityCheckForm;
-import cz.unicorn.tga.tractor.model.form.StkNewForm;
-import cz.unicorn.tga.tractor.model.form.VehicleNewForm;
-import cz.unicorn.tga.tractor.service.StkManagerService;
-import cz.unicorn.tga.tractor.model.form.VehicleChangeStateForm;
+import cz.unicorn.tga.tractor.model.form.*;
 import cz.unicorn.tga.tractor.web.ControllerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -35,8 +30,9 @@ import cz.unicorn.tga.tractor.web.CommonConstants;
 @RequestMapping(value = VehicleController.BASE_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class VehicleController {
 
-    public static final String BASE_URL = CommonConstants.SLASH + "vehicles";
-    public final static String FORM_CREATE_ATTRIBUTE_NAME = "vehicleNewForm";
+    static final String BASE_URL = CommonConstants.SLASH + "vehicles";
+    static final String FORM_CREATE_ATTRIBUTE_NAME = "vehicleNewForm";
+    static final String FORM_AVAILABLE_ATTRIBUTE_NAME = "availabilityCheckForm";
 
     @Autowired
     private VehicleManagerService vehicleService;
@@ -61,7 +57,7 @@ public class VehicleController {
     }
 
     @RequestMapping(value = "/availability", method = RequestMethod.POST)
-    public List<VehicleListDTO> getAvailableCarsForLending(@RequestBody final AvailabilityCheckForm availabilityCheckForm, Pageable pageable) {
+    public List<VehicleListDTO> getAvailableCarsForLending(@RequestBody final AvailabilityCheckForm availabilityCheckForm) {
         return vehicleFacade.getAvailableCarsForLending(availabilityCheckForm);
     }
 
@@ -96,18 +92,25 @@ public class VehicleController {
 
 
     @RequestMapping(value = "/stk", method = RequestMethod.GET)
-    public Page<VehicleListDTO> getAllVehiclesForStk(Pageable pageable) {
+    public Page<VehicleStkDTO> getAllVehiclesForStk(Pageable pageable) {
         return vehicleFacade.getVehiclesWhereStkIsNeeded(pageable);
     }
 
     @RequestMapping(value = "/stk/search", method = RequestMethod.GET)
-    public Page<VehicleStkListDTO> findByFilter(final StkFilter stkFilter, Pageable pageable) {
+    public Page<VehicleStkDTO> findByFilter(final StkFilter stkFilter, Pageable pageable) {
         return vehicleFacade.findByFilter(stkFilter, pageable);
     }
 
     @RequestMapping(value = "/stk/create", method = RequestMethod.POST)
     public void addNewStk(@RequestBody final StkNewForm stkNewForm) {
         vehicleFacade.createNewStk(stkNewForm);
+        return ;
+
+    }
+
+    @RequestMapping(value = "/repair/create", method = RequestMethod.POST)
+    public void addNewRepair(@RequestBody final RepairNewForm repairNewForm) {
+        vehicleFacade.createNewRepair(repairNewForm);
         return ;
 
     }
@@ -127,6 +130,16 @@ public class VehicleController {
 
     @InitBinder(VehicleController.FORM_CREATE_ATTRIBUTE_NAME)
     protected void initBinder2(final WebDataBinder binder) {
+
+        // BigDecimal custom binder
+        ControllerUtils.setNumberCustomEditorToBinder(binder, CommonConstants.CZECH_LOCALE);
+
+        // trim all string
+        ControllerUtils.setStringTrimmerEditorToBinder(binder);
+    }
+
+    @InitBinder(VehicleController.FORM_AVAILABLE_ATTRIBUTE_NAME)
+    protected void initBinder3(final WebDataBinder binder) {
 
         // BigDecimal custom binder
         ControllerUtils.setNumberCustomEditorToBinder(binder, CommonConstants.CZECH_LOCALE);

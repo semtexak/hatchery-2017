@@ -133,8 +133,9 @@ export default React.createClass({
             <UU5.Bricks.Div>
                 <UU5.Bricks.Row>
                     <UU5.Bricks.Column colWidth='xs-12 sm-12 md-12 lg-12'>
-                        <UU5.Bricks.Panel header="Lending" alwaysExpanded={true}
-                                          disableHeaderClick={true}>
+                        <UU5.Bricks.Panel header="Informace o zápůjčce" alwaysExpanded={true}
+                                          disableHeaderClick={true}
+                                            colorSchema="primary">
                             <UU5.Bricks.Table striped>
                                 <UU5.Bricks.Table.THead>
                                     <UU5.Bricks.Table.Tr>
@@ -145,8 +146,9 @@ export default React.createClass({
                                         <UU5.Bricks.Table.Td><strong>VIN:</strong></UU5.Bricks.Table.Td>
                                         <UU5.Bricks.Table.Td>
                                             <UU5.Bricks.Link content={lending.vehicle.vin} onClick={() => {
-                                                UU5.Environment.setRoute(<VehicleDetail vehicleID={lending.vehicle.id} />);
-                                            }} />
+                                                UU5.Environment.setRoute(<VehicleDetail
+                                                    vehicleID={lending.vehicle.id}/>);
+                                            }}/>
                                         </UU5.Bricks.Table.Td>
                                     </UU5.Bricks.Table.Tr>
                                     <UU5.Bricks.Table.Tr>
@@ -157,8 +159,8 @@ export default React.createClass({
                                         <UU5.Bricks.Table.Td><strong>Klient:</strong></UU5.Bricks.Table.Td>
                                         <UU5.Bricks.Table.Td>
                                             <UU5.Bricks.Link content={this._formatClientName(lending)} onClick={() => {
-                                                UU5.Environment.setRoute(<ClientDetail clientID={lending.client.id} />);
-                                            }} />
+                                                UU5.Environment.setRoute(<ClientDetail clientID={lending.client.id}/>);
+                                            }}/>
                                         </UU5.Bricks.Table.Td>
                                     </UU5.Bricks.Table.Tr>
                                     <UU5.Bricks.Table.Tr>

@@ -60,6 +60,11 @@ let Calls = {
         Calls.call(POST, commandUri, dtoIn);
     },
 
+    addRepair: function (dtoIn) {
+        let commandUri = Calls.getCommandUri("vehicles/repair/create");
+        Calls.call(POST, commandUri, dtoIn);
+    },
+
     // Lending detail
     findLending: function (dtoIn) {
         let commandUri = Calls.getCommandUri("lendings/" + dtoIn.data.lendingID);
@@ -105,8 +110,7 @@ let Calls = {
 
     findAvailableVehicles: function (dtoIn) {
         let commandUri = Calls.getCommandUri("vehicles/availability");
-        dtoIn.data = undefined;
-        Calls.call(GET, commandUri, dtoIn);
+        Calls.call(POST, commandUri, dtoIn);
     },
 
     getCommandUri: function (aUseCase) { // useCase <=> "/getSomething" or "/sys/getSomething"

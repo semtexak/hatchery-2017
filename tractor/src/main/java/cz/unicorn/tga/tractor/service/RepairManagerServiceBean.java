@@ -67,18 +67,15 @@ public class RepairManagerServiceBean implements RepairManagerService {
      * @param vehicleRepair
      */
     private void setFieldFromDto(final RepairNewForm repairNewForm, final VehicleRepair vehicleRepair) {
-//        Boolean passed = stkNewForm.getPassed() == 'Y' ? true : false;
-//        vehicleMot.setCheckDate(stkNewForm.getCheckDate());
-//        vehicleMot.setComment(stkNewForm.getComment());
-//        Vehicle vehicle = vehicleDAO.findOne(stkNewForm.getVehicleId());
-//        vehicleMot.setVehicle(vehicle);
-//
-//        // TODO passed to boolean
-//        vehicleMot.setPassed(stkNewForm.getPassed());
-//        if(!passed) {
-//            vehicle.setVehicleState(VehicleState.BROKEN);
-//        }
-//        vehicleMot.setPassed(VehicleType.valueOf(vehicleNewForm.getType()));
+        vehicleRepair.setRepairedAt(repairNewForm.getRepairedAt());
+        vehicleRepair.setPrice(repairNewForm.getPrice());
+        vehicleRepair.setRepairResolution(repairNewForm.getRepairResolution());
+        Vehicle vehicle = vehicleDAO.findOne(repairNewForm.getVehicleId());
+        vehicleRepair.setVehicle(vehicle);
+
+        if(vehicle.getVehicleState() == VehicleState.BROKEN) {
+            vehicle.setVehicleState(VehicleState.IN_GARAGE);
+        }
 
     }
 

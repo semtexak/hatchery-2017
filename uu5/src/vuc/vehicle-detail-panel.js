@@ -52,36 +52,42 @@ export default React.createClass({
     _handleLoadedData(vehicle) {
         return (
             <UU5.Bricks.Row>
-            <UU5.Bricks.Column colWidth='xs-12 sm-12 md-12 lg-12'>
-                <UU5.Bricks.Table striped>
-                    <UU5.Bricks.Table.THead>
-                        <UU5.Bricks.Table.Tr>
-                        </UU5.Bricks.Table.Tr>
-                    </UU5.Bricks.Table.THead>
-                    <UU5.Bricks.Table.TBody>
-                        <UU5.Bricks.Table.Tr>
-                            <UU5.Bricks.Table.Td><strong>Typ:</strong></UU5.Bricks.Table.Td>
-                            <UU5.Bricks.Table.Td>{vehicle.type}</UU5.Bricks.Table.Td>
-                        </UU5.Bricks.Table.Tr>
-                        <UU5.Bricks.Table.Tr>
-                            <UU5.Bricks.Table.Td><strong>VIN:</strong></UU5.Bricks.Table.Td>
-                            <UU5.Bricks.Table.Td>{vehicle.vin}</UU5.Bricks.Table.Td>
-                        </UU5.Bricks.Table.Tr>
-                        <UU5.Bricks.Table.Tr>
-                            <UU5.Bricks.Table.Td><strong>Stav:</strong></UU5.Bricks.Table.Td>
-                            <UU5.Bricks.Table.Td>{vehicle.vehicleState}</UU5.Bricks.Table.Td>
-                        </UU5.Bricks.Table.Tr>
-                        <UU5.Bricks.Table.Tr>
-                            <UU5.Bricks.Table.Td><strong>Datum pořízení:</strong></UU5.Bricks.Table.Td>
-                            <UU5.Bricks.Table.Td>{vehicle.dateOfAcquisition}</UU5.Bricks.Table.Td>
-                        </UU5.Bricks.Table.Tr>
-                        <UU5.Bricks.Table.Tr>
-                            <UU5.Bricks.Table.Td><strong>Cena:</strong></UU5.Bricks.Table.Td>
-                            <UU5.Bricks.Table.Td>{vehicle.price}</UU5.Bricks.Table.Td>
-                        </UU5.Bricks.Table.Tr>
-                    </UU5.Bricks.Table.TBody>
-                </UU5.Bricks.Table>
-            </UU5.Bricks.Column>
+                <UU5.Bricks.Column colWidth='xs-12 sm-12 md-12 lg-12'>
+                    <UU5.Bricks.Accordion>
+                        <UU5.Bricks.Panel header="Informace o vozidle" alwaysExpanded={true}
+                                          disableHeaderClick={true}
+                                          colorSchema="primary">
+                            <UU5.Bricks.Table striped>
+                                <UU5.Bricks.Table.THead>
+                                    <UU5.Bricks.Table.Tr>
+                                    </UU5.Bricks.Table.Tr>
+                                </UU5.Bricks.Table.THead>
+                                <UU5.Bricks.Table.TBody>
+                                    <UU5.Bricks.Table.Tr>
+                                        <UU5.Bricks.Table.Td><strong>Typ:</strong></UU5.Bricks.Table.Td>
+                                        <UU5.Bricks.Table.Td>{vehicle.type}</UU5.Bricks.Table.Td>
+                                    </UU5.Bricks.Table.Tr>
+                                    <UU5.Bricks.Table.Tr>
+                                        <UU5.Bricks.Table.Td><strong>VIN:</strong></UU5.Bricks.Table.Td>
+                                        <UU5.Bricks.Table.Td>{vehicle.vin}</UU5.Bricks.Table.Td>
+                                    </UU5.Bricks.Table.Tr>
+                                    <UU5.Bricks.Table.Tr>
+                                        <UU5.Bricks.Table.Td><strong>Stav:</strong></UU5.Bricks.Table.Td>
+                                        <UU5.Bricks.Table.Td>{vehicle.vehicleState}</UU5.Bricks.Table.Td>
+                                    </UU5.Bricks.Table.Tr>
+                                    <UU5.Bricks.Table.Tr>
+                                        <UU5.Bricks.Table.Td><strong>Datum pořízení:</strong></UU5.Bricks.Table.Td>
+                                        <UU5.Bricks.Table.Td>{vehicle.dateOfAcquisition}</UU5.Bricks.Table.Td>
+                                    </UU5.Bricks.Table.Tr>
+                                    <UU5.Bricks.Table.Tr>
+                                        <UU5.Bricks.Table.Td><strong>Cena:</strong></UU5.Bricks.Table.Td>
+                                        <UU5.Bricks.Table.Td>{vehicle.price}</UU5.Bricks.Table.Td>
+                                    </UU5.Bricks.Table.Tr>
+                                </UU5.Bricks.Table.TBody>
+                            </UU5.Bricks.Table>
+                        </UU5.Bricks.Panel>
+                    </UU5.Bricks.Accordion>
+                </UU5.Bricks.Column>
             </UU5.Bricks.Row>
         )
     },

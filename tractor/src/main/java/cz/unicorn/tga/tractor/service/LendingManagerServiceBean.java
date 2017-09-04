@@ -10,6 +10,7 @@ import cz.unicorn.tga.tractor.entity.Vehicle;
 import cz.unicorn.tga.tractor.model.LendingDetailDTO;
 import cz.unicorn.tga.tractor.model.LendingListDTO;
 import cz.unicorn.tga.tractor.model.VehicleListDTO;
+import cz.unicorn.tga.tractor.model.enumeration.VehicleType;
 import cz.unicorn.tga.tractor.model.form.AvailabilityCheckForm;
 import cz.unicorn.tga.tractor.model.form.LendingNewForm;
 import cz.unicorn.tga.tractor.util.DTOMapper;
@@ -71,8 +72,17 @@ public class LendingManagerServiceBean implements LendingManagerService {
     }
 
     @Override
+    public Page<LendingListDTO> findLatestLendingsForClient(Long id, Pageable pageable) {
+        Date minusYear = Date.from(LocalDate.now().minusMonths(18).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), ControllerConstants.SUB_ITEMS_PER_PAGE, Sort.Direction.DESC, "lendFrom");
+        Page<Lending> lendingPage = lendingDAO.findLatestByClient(id, minusYear, pageRequest);
+        return new PageImpl<LendingListDTO>(dtoMapper.toLendingList(lendingPage.getContent()), pageRequest, lendingPage.getTotalElements());
+    }
+
+    @Override
     public List<VehicleListDTO> findAvailableCarsForLending(AvailabilityCheckForm availabilityCheckForm) {
-        List<Vehicle> vehicles = lendingDAO.findAvailableVehicles(availabilityCheckForm.getLendFrom(), availabilityCheckForm.getLendTo());
+        VehicleType type = VehicleType.valueOf(availabilityCheckForm.getType());
+        List<Vehicle> vehicles = lendingDAO.findAvailableVehicles(type, availabilityCheckForm.getLendFrom(), availabilityCheckForm.getLendTo());
         return dtoMapper.toVehicleList(vehicles);
     }
 

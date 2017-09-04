@@ -22,15 +22,15 @@ export default React.createClass({
     },
     lsi: {
       list:{
-        cs: "Seznam traktorů",
-        en: "Tractor list"
+        cs: "Seznam vozidel",
+        en: "Vehicle list"
       },
       about: {
         cs: "O půjčovně",
         en: "About"
       },
       stk: {
-        cs: "STK",
+        cs: "Přehled STK",
         en: "STK"
       }
     }

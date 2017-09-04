@@ -68,7 +68,7 @@ export default React.createClass({
     },
     _renderSelectFilter() {
         return (
-            <UU5.Forms.Select name="type" label="Typ:">
+            <UU5.Forms.Select name="type" label="Typ:" value="BULLDOZER">
                 <UU5.Forms.Select.Option value="BULLDOZER" />
                 <UU5.Forms.Select.Option value="TRACTOR" />
                 <UU5.Forms.Select.Option value="DREDGING" />
@@ -166,9 +166,10 @@ export default React.createClass({
             loadFeedback: "loading"
         }, () => {
             let vals = this._filterForm.getValues();
+            if(vals.vin === "") delete vals.vin;
             console.log(vals);
             this.getCall("find")({
-                data: this._filterForm.getValues(),
+                data: vals,
                 done: (data) => {
                     this.setState({
                         dtoOut: data,
@@ -210,7 +211,7 @@ export default React.createClass({
 
     _handleLoadedTractors(tractors) {
         if (!tractors || tractors.totalElements === 0) {
-            return <UU5.Bricks.P>Není tu žádný traktor</UU5.Bricks.P>
+            return <UU5.Bricks.P>Není tu žádné vozidlo.</UU5.Bricks.P>
         }
         let vehicles = tractors.content;
 
@@ -224,13 +225,12 @@ export default React.createClass({
                 </UU5.Bricks.Table.Td>
                 <UU5.Bricks.Table.Td>{vehicle.type}</UU5.Bricks.Table.Td>
                 <UU5.Bricks.Table.Td>{vehicle.dateOfAcquisition}</UU5.Bricks.Table.Td>
-                <UU5.Bricks.Table.Td>{vehicle.vehicleState}</UU5.Bricks.Table.Td>
                 <UU5.Bricks.Table.Td>
                     <UU5.Bricks.Link content={this._formatClientName(vehicle.currentLending)} onClick={() => {
                         UU5.Environment.setRoute(<LendingDetail lendingID={vehicle.currentLending.id} />);
                     }} />
                 </UU5.Bricks.Table.Td>
-                <UU5.Bricks.Table.Td></UU5.Bricks.Table.Td>
+                <UU5.Bricks.Table.Td>{vehicle.vehicleState}</UU5.Bricks.Table.Td>
             </UU5.Bricks.Table.Tr>
         ));
 
@@ -242,9 +242,8 @@ export default React.createClass({
                             <UU5.Bricks.Table.Th>VIN</UU5.Bricks.Table.Th>
                             <UU5.Bricks.Table.Th>Typ</UU5.Bricks.Table.Th>
                             <UU5.Bricks.Table.Th>Stáří</UU5.Bricks.Table.Th>
-                            <UU5.Bricks.Table.Th>Stav</UU5.Bricks.Table.Th>
                             <UU5.Bricks.Table.Th>Klient</UU5.Bricks.Table.Th>
-                            <UU5.Bricks.Table.Th>Akce</UU5.Bricks.Table.Th>
+                            <UU5.Bricks.Table.Th>Stav</UU5.Bricks.Table.Th>
                         </UU5.Bricks.Table.Tr>
                     </UU5.Bricks.Table.THead>
                     <UU5.Bricks.Table.TBody>

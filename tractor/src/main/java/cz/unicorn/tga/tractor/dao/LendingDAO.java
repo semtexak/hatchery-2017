@@ -21,12 +21,12 @@ public interface LendingDAO extends JpaRepository<Lending, Long> {
     @Query("SELECT l FROM Lending l WHERE l.vehicle.id = :id")
     Page<Lending> findByVehicle(@Param("id") Long id, Pageable pageable);
 
-    @Query("SELECT l FROM Lending l WHERE l.vehicle.id = :id AND l.lendFrom >= :minusYear")
-    Page<Lending> findLatestByVehicle(@Param("id") Long id, @Param("minusYear") Date minusYear, Pageable pageable);
+    @Query("SELECT l FROM Lending l WHERE l.vehicle.id = :id AND l.lendFrom >= :minusYearAndHalf")
+    Page<Lending> findLatestByVehicle(@Param("id") Long id, @Param("minusYearAndHalf") Date minusYearAndHalf, Pageable pageable);
 
     @Query("SELECT l FROM Lending l WHERE l.client.id = :id AND l.lendFrom >= :minusYearAndHalf")
-    Page<Lending> findLatestByClient(@Param("id") Long id, @Param("minusYear") Date minusYearAndHalf, Pageable pageable);
+    Page<Lending> findLatestByClient(@Param("id") Long id, @Param("minusYearAndHalf") Date minusYearAndHalf, Pageable pageable);
 
-    @Query("SELECT v FROM Vehicle v WHERE v.id IN (SELECT l.id FROM Lending l WHERE (l.lendFrom BETWEEN  :lendFrom AND :lendTo) OR (l.lendTo BETWEEN  :lendFrom AND :lendTo))")
-    List<Vehicle> findAvailableVehicles(@Param("lendFrom") Date lendFrom, @Param("lendTo") Date lendTo);
+    @Query("SELECT v FROM Vehicle v WHERE v.id NOT IN (SELECT l.id FROM Lending l WHERE (l.lendFrom BETWEEN  :lendFrom AND :lendTo) OR (l.lendTo BETWEEN  :lendFrom AND :lendTo)) AND v.type = :type")
+    List<Vehicle> findAvailableVehicles(@Param("type") VehicleType type, @Param("lendFrom") Date lendFrom, @Param("lendTo") Date lendTo);
 }

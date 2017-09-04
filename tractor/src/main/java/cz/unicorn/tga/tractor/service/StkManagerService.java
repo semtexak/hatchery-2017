@@ -15,9 +15,9 @@ public interface StkManagerService {
 
     void createNewStk(StkNewForm stkNewForm);
 
-    Page<VehicleStkListDTO> findByFilter(StkFilter filter, Pageable pageable);
+    Page<VehicleStkDTO> findByFilter(StkFilter filter, Pageable pageable);
 
-    Page<VehicleListDTO> getVehicles(Pageable pageable);
+    Page<VehicleStkDTO> getVehicles(Pageable pageable);
 
     Page<StkListDTO> findAllStksForVehicle(Long id, Pageable pageable);
 }

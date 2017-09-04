@@ -42,7 +42,7 @@ public class VehicleFilterDAOImpl extends GenericHibernateDAO<Vehicle, Long> imp
 
         builder.appendIfNotNull("AND c.id = :id", "id", filter.getId());
 
-        if(filter.getVin().equals("")) builder.appendIfNotNull("AND c.vin = :vin", "vin", filter.getVin());
+        if(filter.getVin() != null) builder.appendIfNotNull("AND c.vin = :vin", "vin", filter.getVin());
         builder.appendIfNotNull("AND c.type = :type", "type", VehicleType.valueOf(filter.getType()));
         builder.appendIfNotNull("AND c.state = :state", "state", filter.getState());
         builder.appendIfNotNull("AND c.dateOfAcquisition >= :acquiredFrom", "acquiredFrom", filter.getAcquiredFrom());

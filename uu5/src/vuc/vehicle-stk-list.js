@@ -44,50 +44,28 @@ export default React.createClass({
     //@@viewOff:standardComponentLifeCycle
 
     //@@viewOn:componentSpecificHelpers
-    _getNewForm() {
-        if (!this.state.showForm) {
-            return null;
-        }
-
-        return (
-            <UU5.Bricks.Panel header="Přidání STK vozidla" alwaysExpanded={true} disableHeaderClick={true}>
-                <UU5.Forms.BasicForm ref_={this._handleNewFormReference}>
-                    <UU5.Forms.Text name="type" value="RECLAIMER" label="Typ"/>
-                    <UU5.Forms.Text name="vin" value="AHTBB3QD001726541" label="VIN"/>
-                    <UU5.Forms.Text name="date" value="1487812893" label="Datum"/>
-                    <UU5.Forms.Text name="price" value="1100000" label="Cena"/>
-                </UU5.Forms.BasicForm>
-
-                <UU5.Bricks.Button colorSchema="warning" onClick={this._handleCancelClick}>Zavřít</UU5.Bricks.Button>
-                <UU5.Bricks.Button colorSchema="primary" onClick={this._handleCreateNewCar}>Uložit</UU5.Bricks.Button>
-            </UU5.Bricks.Panel>
-        )
-    },
 
     _getFilterForm() {
         return (
             <UU5.Forms.BasicForm ref_={this._handleFilterFormReference}>
                 <UU5.Bricks.Row>
                     <UU5.Bricks.Column colWidth="lg-3">
-                        {/*<UU5.Forms.Datepicker*/}
-                            {/*name="checkDate"*/}
-                            {/*label="Od"*/}
-                            {/*glyphiconOpened="uu-glyphicon-ok"*/}
-                            {/*glyphiconClosed="glyphicon-calendar"*/}
-                            {/*value="2007-08-21"*/}
-                            {/*format="Y-mm-dd"*/}
-                        {/*/>*/}
-                        <UU5.Forms.Text name="checkDateFrom" label="Od" controlled={false} value="2007-08-21"/>
+                        <UU5.Forms.Datepicker
+                            name="checkDateFrom"
+                            label="Od"
+                            glyphiconOpened="uu-glyphicon-ok"
+                            glyphiconClosed="glyphicon-calendar"
+                        />
+                        {/*<UU5.Forms.Text name="checkDateFrom" label="Od" controlled={false} value="2007-08-21"/>*/}
                     </UU5.Bricks.Column>
                     <UU5.Bricks.Column colWidth="lg-3">
-                        {/*<UU5.Forms.Datepicker*/}
-                            {/*name="checkDate"*/}
-                            {/*label="Do"*/}
-                            {/*glyphiconOpened="uu-glyphicon-ok"*/}
-                            {/*glyphiconClosed="glyphicon-calendar"*/}
-                            {/*value="2007-08-23"*/}
-                        {/*/>*/}
-                        <UU5.Forms.Text name="checkDateTo" label="Do" controlled={false} value="2007-08-23"/>
+                        <UU5.Forms.Datepicker
+                            name="checkDateTo"
+                            label="Do"
+                            glyphiconOpened="uu-glyphicon-ok"
+                            glyphiconClosed="glyphicon-calendar"
+                        />
+                        {/*<UU5.Forms.Text name="checkDateTo" label="Do" controlled={false} value="2007-08-23"/>*/}
                     </UU5.Bricks.Column>
 
                     <UU5.Bricks.Column colWidth="lg-6">
@@ -113,33 +91,8 @@ export default React.createClass({
         return <UU5.Bricks.Div>Seznam vozidel {button}</UU5.Bricks.Div>
     },
 
-    _handleNewFormReference(form) {
-        this._addForm = form;
-    },
-
     _handleFilterFormReference(form) {
         this._filterForm = form
-    },
-
-    _handleCreateNewCar() {
-        let formData = this._addForm.getValues();
-
-        // hide form and show loading
-        this.setState({
-            loadFeedback: "loading",
-            showForm: false
-        }, () => {
-            this.getCall("create")({
-                data: formData,
-                done: () => {
-                    this.reload()
-                },
-                fail: (response) => console.error(response)
-            })
-        });
-
-        // clear up reference
-        this._addForm = undefined
     },
 
     _handleCancelFilter() {
@@ -158,11 +111,16 @@ export default React.createClass({
     },
 
     _handleFilterClick() {
+        let formData = this._filterForm.getValues();
+        let dates = {
+            checkDateTo: formData.checkDateTo.toISOString().slice(0, 10),
+            checkDateFrom: formData.checkDateFrom.toISOString().slice(0, 10)
+        };
         this.setState({
             loadFeedback: "loading"
         }, () => {
             this.getCall("find")({
-                data: this._filterForm.getValues(),
+                data: dates,
                 done: (data) => {
                     this.setState({
                         dtoOut: data,
@@ -180,17 +138,33 @@ export default React.createClass({
             actual: index,
             loadFeedback: "loading"
         }, () => {
-            this.getCall("onLoad")({
-                data: {page: ++index},
-                done: (data) => {
-                    this.setState({
-                        dtoOut: data,
-                        loadFeedback: "ready",
-                        filtered: true
-                    })
-                },
-                fail: (response) => console.error(response)
-            })
+            if(this.state.filtered) {
+                let filter = this._filterForm.getValues();
+                filter.page = index;
+                this.getCall("find")({
+                    data: filter,
+                    done: (data) => {
+                        this.setState({
+                            dtoOut: data,
+                            loadFeedback: "ready",
+                            filtered: true
+                        })
+                    },
+                    fail: (response) => console.error(response)
+                })
+            } else {
+                this.getCall("onLoad")({
+                    data: {page: index},
+                    done: (data) => {
+                        this.setState({
+                            dtoOut: data,
+                            loadFeedback: "ready",
+                            filtered: false
+                        })
+                    },
+                    fail: (response) => console.error(response)
+                })
+            }
         })
     },
 
@@ -200,7 +174,7 @@ export default React.createClass({
 
     _handleLoadedTractors(tractors) {
         if (!tractors || tractors.totalElements === 0) {
-            return <UU5.Bricks.P>Není tu žádný traktor</UU5.Bricks.P>
+            return <UU5.Bricks.P>Není tu žádné vozidlo.</UU5.Bricks.P>
         }
         let vehicles = tractors.content;
 
@@ -250,8 +224,6 @@ export default React.createClass({
         return (
             <UU5.Bricks.Div>
                 <UU5.Bricks.Header level={2}>Seznam vozidel (STK)</UU5.Bricks.Header>
-
-                {this._getNewForm()}
                 <UU5.Bricks.Panel header={this._getPanelHeader()} alwaysExpanded={true} disableHeaderClick={true}>
                     {this._getFilterForm()}
 

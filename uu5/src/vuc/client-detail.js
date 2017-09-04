@@ -2,6 +2,7 @@ import React from "react";
 import * as UU5 from "uu5g04";
 import Cfg from "../core/_config.js";
 import LendingPanel from "./client-lending-panel.js";
+import LendingForm from "./client-lending-form.js";
 import ClientPanel from "./client-detail-panel.js";
 
 import Calls from "calls"
@@ -118,6 +119,7 @@ export default React.createClass({
                 {this._getNewForm()}
                 <UU5.Bricks.Div>
                     <ClientPanel clientID={this.props.clientID} />
+                    <LendingForm clientID={this.props.clientID} />
                     <LendingPanel clientID={this.props.clientID} />
                 </UU5.Bricks.Div>
                 {/*{this.getLoadFeedbackChildren(this._handleLoadedVehicle)}*/}

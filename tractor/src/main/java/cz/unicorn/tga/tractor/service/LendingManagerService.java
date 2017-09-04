@@ -21,4 +21,6 @@ public interface LendingManagerService {
     Page<LendingListDTO> findLatestLendingsForVehicle(Long id, Pageable pageable);
 
     List<VehicleListDTO> findAvailableCarsForLending(AvailabilityCheckForm availabilityCheckForm);
+
+    Page<LendingListDTO> findLatestLendingsForClient(Long id, Pageable pageable);
 }
